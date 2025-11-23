@@ -83,11 +83,11 @@ export default function HomeScreen({ navigation }) {
           </View>
         </View>
 
-        <ProductCarousel
-          title="Offers"
-          items={[
+        {(() => {
+          const offers = [
             {
               id: "1",
+              name: "Pure Mineral Water - 6 Pack",
               image:
                 "https://www.shutterstock.com/image-vector/transparent-realistic-vector-mineral-water-600nw-2104613384.jpg",
               price: 170,
@@ -97,6 +97,7 @@ export default function HomeScreen({ navigation }) {
             },
             {
               id: "2",
+              name: "Drinking Water - 250ml",
               image:
                 "https://www.shutterstock.com/image-vector/transparent-realistic-vector-mineral-water-600nw-2104613384.jpg",
               price: 172.73,
@@ -106,6 +107,7 @@ export default function HomeScreen({ navigation }) {
             },
             {
               id: "3",
+              name: "Mineral Water - 1.5 Litre",
               image:
                 "https://www.shutterstock.com/image-vector/transparent-realistic-vector-mineral-water-600nw-2104613384.jpg",
               price: 520,
@@ -115,6 +117,7 @@ export default function HomeScreen({ navigation }) {
             },
             {
               id: "4",
+              name: "Drinking Water - 250 ml (Pack of 2)",
               image:
                 "https://www.shutterstock.com/image-vector/transparent-realistic-vector-mineral-water-600nw-2104613384.jpg",
               price: 172.73,
@@ -124,6 +127,7 @@ export default function HomeScreen({ navigation }) {
             },
             {
               id: "5",
+              name: "Mineral Water - 1.5 Litre (Bundle)",
               image:
                 "https://www.shutterstock.com/image-vector/transparent-realistic-vector-mineral-water-600nw-2104613384.jpg",
               price: 520,
@@ -131,10 +135,23 @@ export default function HomeScreen({ navigation }) {
               variant: "1.5 litre",
               discount: "-13.3%",
             },
-          ]}
-          onPressItem={(item) => navigation.navigate("ProductDetail", { item })}
-          containerHeight={220}
-        />
+          ];
+
+          // products can be separate from offers; for demo we use same items
+          const products = offers.map((item) => ({ ...item }));
+
+          return (
+            <ProductCarousel
+              title="Offers"
+              items={offers}
+              products={products}
+              onPressItem={(item) =>
+                navigation.navigate("ProductDetail", { item })
+              }
+              containerHeight={220}
+            />
+          );
+        })()}
 
         <View style={styles.cardsContainer}>
           <TouchableOpacity style={styles.card}>

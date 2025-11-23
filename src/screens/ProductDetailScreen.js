@@ -14,7 +14,9 @@ export default function ProductDetailScreen({ route, navigation }) {
   return (
     <ScrollView contentContainerStyle={styles.container}>
       <Image source={{ uri: item?.image }} style={styles.image} />
-      <Text style={styles.title}>{item?.variant || "Product"}</Text>
+      <Text style={styles.title}>
+        {item?.name || item?.variant || "Product"}
+      </Text>
       <Text style={styles.price}>Rs {item?.price}</Text>
       {item?.originalPrice ? (
         <Text style={styles.originalPrice}>Rs {item?.originalPrice}</Text>

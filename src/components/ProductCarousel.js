@@ -12,56 +12,144 @@ import colors from "../theme/colors";
 
 export default function ProductCarousel({
   items = [],
+  products = null,
   title = "Offers",
   onPressItem,
-  containerHeight = 220,
+  carouselHeight = 220, // height for the horizontal carousel only
+  containerHeight, // deprecated - kept for backward compatibility with existing usages
+  showGrid = true, // whether to render a 2-column grid below
+  gridTitle = "Products",
 }) {
   const { width } = Dimensions.get("window");
-  const cardWidth = Math.round((width - 20 - 24) / 3); // approximate 3 items per row with padding
+  const cardWidth = Math.round((width - 20 - 24) / 3); // approximate 3 items per row with padding for carousel
+  const gridCardWidth = Math.round((width - 24 - 12) / 2); // 2 per row in grid - kept for backward compatibility, we use percent widths for grid
 
-  const imageHeight = Math.round(containerHeight * 0.44);
+  const effectiveCarouselHeight =
+    typeof containerHeight !== "undefined" ? containerHeight : carouselHeight;
+  const imageHeight = Math.round(effectiveCarouselHeight * 0.44);
+  const effectiveGridTitle = gridTitle || "Products";
+  const gridItems =
+    Array.isArray(products) && products.length > 0 ? products : items;
   return (
-    <View style={[styles.container, { height: containerHeight }]}>
+    <View style={styles.container}>
       <View style={styles.header}>
         <Text style={styles.headerTitle}>{title}</Text>
         <TouchableOpacity style={styles.seeMoreButton} onPress={() => {}}>
           <Text style={styles.seeMoreText}>See More</Text>
         </TouchableOpacity>
       </View>
-      <ScrollView
-        horizontal
-        showsHorizontalScrollIndicator={false}
-        contentContainerStyle={styles.scrollContent}
-      >
-        {items.map((item) => (
-          <View key={item.id} style={[styles.card, { width: cardWidth }]}>
-            {item.discount ? (
-              <View style={styles.badge}>
-                <Text style={styles.badgeText}>{item.discount}</Text>
+      <View style={[styles.carouselWrapper]}>
+        <ScrollView
+          horizontal
+          showsHorizontalScrollIndicator={false}
+          contentContainerStyle={styles.scrollContent}
+        >
+          {items.map((item) => (
+            <TouchableOpacity
+              key={item.id}
+              style={[styles.card, { width: cardWidth }]}
+              onPress={() => onPressItem && onPressItem(item)}
+              activeOpacity={0.85}
+            >
+              {item.discount ? (
+                <View style={styles.badge}>
+                  <Text style={styles.badgeText}>{item.discount}</Text>
+                </View>
+              ) : null}
+              <Image
+                source={{ uri: item.image }}
+                style={[styles.image, { height: imageHeight }]}
+              />
+              <View style={styles.priceRow}>
+                <Text style={styles.price}>Rs {item.price}</Text>
+                {item.originalPrice ? (
+                  <Text style={styles.originalPrice}>
+                    Rs {item.originalPrice}
+                  </Text>
+                ) : null}
               </View>
-            ) : null}
-            <Image
-              source={{ uri: item.image }}
-              style={[styles.image, { height: imageHeight }]}
-            />
-            <View style={styles.priceRow}>
-              <Text style={styles.price}>Rs {item.price}</Text>
-              {item.originalPrice ? (
-                <Text style={styles.originalPrice}>
-                  Rs {item.originalPrice}
+              {item.name ? (
+                <Text
+                  style={styles.productName}
+                  numberOfLines={1}
+                  ellipsizeMode="tail"
+                >
+                  {item.name}
                 </Text>
               ) : null}
-            </View>
-            <Text style={styles.variant}>{item.variant}</Text>
-            <TouchableOpacity
-              style={styles.addButton}
-              onPress={() => onPressItem && onPressItem(item)}
-            >
-              <Text style={styles.addText}>Add To Cart</Text>
+              <Text style={styles.variant}>{item.variant}</Text>
+              <TouchableOpacity
+                style={styles.addButton}
+                onPress={() => onPressItem && onPressItem(item)}
+              >
+                <Text style={styles.addText}>Add To Cart</Text>
+              </TouchableOpacity>
+            </TouchableOpacity>
+          ))}
+        </ScrollView>
+      </View>
+
+      {showGrid ? (
+        <View style={styles.gridSection}>
+          <View style={styles.header}>
+            <Text style={styles.headerTitle}>{effectiveGridTitle}</Text>
+            <TouchableOpacity style={styles.seeMoreButton} onPress={() => {}}>
+              <Text style={styles.seeMoreText}>See More</Text>
             </TouchableOpacity>
           </View>
-        ))}
-      </ScrollView>
+          <View style={styles.gridContainer}>
+            {gridItems.map((item, index) => (
+              <TouchableOpacity
+                key={`grid-${item.id}`}
+                style={[
+                  styles.card,
+                  styles.gridCard,
+                  index % 2 === 0 ? styles.gridCardLeft : styles.gridCardRight,
+                ]}
+                onPress={() => onPressItem && onPressItem(item)}
+                activeOpacity={0.85}
+              >
+                {item.discount ? (
+                  <View style={styles.badge}>
+                    <Text style={styles.badgeText}>{item.discount}</Text>
+                  </View>
+                ) : null}
+                <Image
+                  source={{ uri: item.image }}
+                  style={[
+                    styles.image,
+                    { height: Math.round(effectiveCarouselHeight * 0.45) },
+                  ]}
+                />
+                <View style={styles.priceRow}>
+                  <Text style={styles.price}>Rs {item.price}</Text>
+                  {item.originalPrice ? (
+                    <Text style={styles.originalPrice}>
+                      Rs {item.originalPrice}
+                    </Text>
+                  ) : null}
+                </View>
+                {item.name ? (
+                  <Text
+                    style={styles.productName}
+                    numberOfLines={1}
+                    ellipsizeMode="tail"
+                  >
+                    {item.name}
+                  </Text>
+                ) : null}
+                <Text style={styles.variant}>{item.variant}</Text>
+                <TouchableOpacity
+                  style={styles.addButton}
+                  onPress={() => onPressItem && onPressItem(item)}
+                >
+                  <Text style={styles.addText}>Add To Cart</Text>
+                </TouchableOpacity>
+              </TouchableOpacity>
+            ))}
+          </View>
+        </View>
+      ) : null}
     </View>
   );
 }
@@ -151,6 +239,14 @@ const styles = StyleSheet.create({
     color: colors.gray,
     fontSize: 12,
   },
+  productName: {
+    paddingHorizontal: 8,
+    paddingTop: 6,
+    paddingBottom: 2,
+    color: colors.dark,
+    fontSize: 14,
+    fontWeight: "600",
+  },
   addButton: {
     backgroundColor: colors.primary,
     marginHorizontal: 6,
@@ -162,5 +258,29 @@ const styles = StyleSheet.create({
     color: colors.white,
     fontWeight: "700",
     fontSize: 10,
+  },
+  carouselWrapper: {
+    marginBottom: 10,
+  },
+  gridSection: {
+    marginTop: 8,
+  },
+  gridContainer: {
+    flexDirection: "row",
+    flexWrap: "wrap",
+    // space-between helps distribute the two columns nicely
+    justifyContent: "space-between",
+  },
+  gridCard: {
+    width: "48%",
+    marginBottom: 12,
+    // override margins used by carousel card
+    marginRight: 0,
+  },
+  gridCardLeft: {
+    marginRight: 0,
+  },
+  gridCardRight: {
+    marginRight: 0,
   },
 });
