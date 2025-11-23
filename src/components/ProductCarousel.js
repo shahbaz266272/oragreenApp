@@ -149,7 +149,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 8,
     paddingVertical: 6,
     color: colors.gray,
-    fontSize: 1,
+    fontSize: 12,
   },
   addButton: {
     backgroundColor: colors.primary,
