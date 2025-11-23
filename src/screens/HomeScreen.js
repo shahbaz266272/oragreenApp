@@ -62,7 +62,7 @@ export default function HomeScreen({ navigation }) {
             decelerationRate="fast"
           >
             {images.map((uri, idx) => (
-              <View key={uri} style={{ width: slideWidth, marginRight: gap }}>
+              <View key={idx} style={{ width: slideWidth, marginRight: gap }}>
                 <Image
                   source={{ uri }}
                   style={[styles.slideImage, { width: slideWidth }]}
