@@ -1,6 +1,35 @@
 import colors from "./src/theme/colors";
 import "react-native-gesture-handler";
 import React, { useEffect, useState, useCallback } from "react";
+import { Provider } from "react-redux";
+import { configureStore, createSlice } from "@reduxjs/toolkit";
+
+// Define a simple cart slice and store inline to avoid separate files
+const cartSlice = createSlice({
+  name: "cart",
+  initialState: { items: [] },
+  reducers: {
+    addToCart(state, action) {
+      const product = action.payload;
+      const idx = state.items.findIndex((it) => it.id === product.id);
+      if (idx > -1) {
+        state.items[idx].qty = (state.items[idx].qty || 1) + 1;
+      } else {
+        state.items.push({ ...product, qty: 1 });
+      }
+    },
+    removeFromCart(state, action) {
+      state.items = state.items.filter((it) => it.id !== action.payload);
+    },
+    clearCart(state) {
+      state.items = [];
+    },
+  },
+});
+
+const store = configureStore({
+  reducer: { cart: cartSlice.reducer },
+});
 import { NavigationContainer } from "@react-navigation/native";
 import { createDrawerNavigator } from "@react-navigation/drawer";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
@@ -156,52 +185,56 @@ export default function App() {
   );
 
   return (
-    <NavigationContainer>
-      <View style={{ flex: 1 }} onLayout={onLayoutRootView}>
-        <Stack.Navigator
-          initialRouteName="Main"
-          screenOptions={{
-            headerStyle: {
-              backgroundColor: colors.primary,
-            },
-            headerTintColor: colors.white,
-            headerTitleStyle: {
-              fontWeight: "bold",
-            },
-            headerTitle: (props) => <HeaderLogo title={props.children} />,
-          }}
-        >
-          <Stack.Screen
-            name="Main"
-            component={DrawerNavigator}
-            options={{ headerShown: false }}
-          />
-          <Stack.Screen
-            name="ProductDetail"
-            getComponent={() =>
-              require("./src/screens/ProductDetailScreen").default
-            }
-            options={({ route }) => ({
-              title: route?.params?.item?.variant || "Product",
-            })}
-          />
-          <Stack.Screen
-            name="Address"
-            component={AddressesScreen}
-            options={{ title: "Addresses" }}
-          />
-          <Stack.Screen
-            name="Checkout"
-            getComponent={() => require("./src/screens/CheckoutScreen").default}
-            options={{ title: "Checkout" }}
-          />
-          <Stack.Screen
-            name="Orders"
-            getComponent={() => require("./src/screens/OrdersScreen").default}
-            options={{ title: "My Orders" }}
-          />
-        </Stack.Navigator>
-      </View>
-    </NavigationContainer>
+    <Provider store={store}>
+      <NavigationContainer>
+        <View style={{ flex: 1 }} onLayout={onLayoutRootView}>
+          <Stack.Navigator
+            initialRouteName="Main"
+            screenOptions={{
+              headerStyle: {
+                backgroundColor: colors.primary,
+              },
+              headerTintColor: colors.white,
+              headerTitleStyle: {
+                fontWeight: "bold",
+              },
+              headerTitle: (props) => <HeaderLogo title={props.children} />,
+            }}
+          >
+            <Stack.Screen
+              name="Main"
+              component={DrawerNavigator}
+              options={{ headerShown: false }}
+            />
+            <Stack.Screen
+              name="ProductDetail"
+              getComponent={() =>
+                require("./src/screens/ProductDetailScreen").default
+              }
+              options={({ route }) => ({
+                title: route?.params?.item?.variant || "Product",
+              })}
+            />
+            <Stack.Screen
+              name="Address"
+              component={AddressesScreen}
+              options={{ title: "Addresses" }}
+            />
+            <Stack.Screen
+              name="Checkout"
+              getComponent={() =>
+                require("./src/screens/CheckoutScreen").default
+              }
+              options={{ title: "Checkout" }}
+            />
+            <Stack.Screen
+              name="Orders"
+              getComponent={() => require("./src/screens/OrdersScreen").default}
+              options={{ title: "My Orders" }}
+            />
+          </Stack.Navigator>
+        </View>
+      </NavigationContainer>
+    </Provider>
   );
 }

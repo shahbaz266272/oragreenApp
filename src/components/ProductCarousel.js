@@ -9,6 +9,7 @@ import {
   Dimensions,
 } from "react-native";
 import colors from "../theme/colors";
+import { useDispatch } from "react-redux";
 
 export default function ProductCarousel({
   items = [],
@@ -30,6 +31,7 @@ export default function ProductCarousel({
   const effectiveGridTitle = gridTitle || "Products";
   const gridItems =
     Array.isArray(products) && products.length > 0 ? products : items;
+  const dispatch = useDispatch();
   return (
     <View style={styles.container}>
       <View style={styles.header}>
@@ -80,7 +82,9 @@ export default function ProductCarousel({
               <Text style={styles.variant}>{item.variant}</Text>
               <TouchableOpacity
                 style={styles.addButton}
-                onPress={() => onPressItem && onPressItem(item)}
+                onPress={() =>
+                  dispatch({ type: "cart/addToCart", payload: item })
+                }
               >
                 <Text style={styles.addText}>Add To Cart</Text>
               </TouchableOpacity>
@@ -141,7 +145,9 @@ export default function ProductCarousel({
                 <Text style={styles.variant}>{item.variant}</Text>
                 <TouchableOpacity
                   style={styles.addButton}
-                  onPress={() => onPressItem && onPressItem(item)}
+                  onPress={() =>
+                    dispatch({ type: "cart/addToCart", payload: item })
+                  }
                 >
                   <Text style={styles.addText}>Add To Cart</Text>
                 </TouchableOpacity>

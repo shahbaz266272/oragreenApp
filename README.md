@@ -35,6 +35,11 @@ cd ExpoSidebarApp
 npm install
 ```
 
+If you added new dependencies (recommended: Redux Toolkit), run:
+```bash
+npm install @reduxjs/toolkit react-redux
+```
+
 ### Running the App
 
 Start the development server:
