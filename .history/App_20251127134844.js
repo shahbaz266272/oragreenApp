@@ -19,6 +19,7 @@ import HeaderLogo from "./src/components/HeaderLogo";
 // removed direct MaterialCommunityIcons import - components use icons instead
 import CustomDrawerContent from "./src/components/CustomDrawerContent";
 import { store } from "./src/store/store";
+import AddAddressScreen from "./src/screens/AddAddressScreen";
 
 const Drawer = createDrawerNavigator();
 const Stack = createNativeStackNavigator();
@@ -200,11 +201,6 @@ export default function App() {
                 require("./src/screens/AddAddressScreen").default
               }
               options={{ title: "Add Address" }}
-            />
-            <Stack.Screen
-              name="cartScreen"
-              getComponent={() => require("./src/screens/CartScreen").default}
-              options={{ title: "Cart Screen" }}
             />
             <Stack.Screen
               name="Checkout"

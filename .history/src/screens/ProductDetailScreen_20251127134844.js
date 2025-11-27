@@ -53,7 +53,7 @@ export default function ProductDetailScreen({ route, navigation }) {
         style={styles.button}
         onPress={() => {
           handleAdd(item);
-          navigation.navigate("cartScreen", { item });
+          navigation.navigate("Checkout", { item });
         }}
       >
         <Text style={styles.buttonText}>Add To Cart</Text>

@@ -5,6 +5,6 @@ import addressReducer from "../features/address/addressCart";
 export const store = configureStore({
   reducer: {
     cart: cartReducer,
-    selectedAddress: addressReducer,
+    address: addressReducer,
   },
 });

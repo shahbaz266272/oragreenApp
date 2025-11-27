@@ -27,7 +27,7 @@ export default function HomeScreen({ navigation }) {
     navigation.setOptions({
       headerRight: () => (
         <TouchableOpacity
-          onPress={() => navigation.navigate("cartScreen")}
+          onPress={() => navigation.navigate("Checkout")}
           style={{ marginRight: 16 }}
         >
           <View style={{ position: "relative" }}>

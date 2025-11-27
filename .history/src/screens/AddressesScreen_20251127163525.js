@@ -10,8 +10,6 @@ import {
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import colors from "../theme/colors";
-import { useDispatch } from "react-redux";
-import { setSelectedAddress } from "../features/address/addressCart";
 
 export default function AddressesScreen({ navigation }) {
   const [addresses, setAddresses] = useState([]);
@@ -35,7 +33,7 @@ export default function AddressesScreen({ navigation }) {
     const unsubscribe = navigation.addListener("focus", loadAddresses);
     return unsubscribe;
   }, [navigation]);
-  const dispatch = useDispatch();
+
   return (
     <View style={styles.container}>
       <View style={styles.header}>
@@ -47,13 +45,7 @@ export default function AddressesScreen({ navigation }) {
         keyExtractor={(item) => item.id}
         contentContainerStyle={styles.list}
         renderItem={({ item }) => (
-          <TouchableOpacity
-            style={styles.item}
-            onPress={() => {
-              dispatch(setSelectedAddress(item));
-              navigation.navigate("Checkout");
-            }}
-          >
+          <TouchableOpacity style={styles.item}>
             <MaterialCommunityIcons
               name="map-marker-outline"
               size={26}

@@ -51,7 +51,7 @@ export default function AddressesScreen({ navigation }) {
             style={styles.item}
             onPress={() => {
               dispatch(setSelectedAddress(item));
-              navigation.navigate("Checkout");
+              navigation.navigate("cartScreen");
             }}
           >
             <MaterialCommunityIcons

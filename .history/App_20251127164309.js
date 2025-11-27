@@ -202,11 +202,6 @@ export default function App() {
               options={{ title: "Add Address" }}
             />
             <Stack.Screen
-              name="cartScreen"
-              getComponent={() => require("./src/screens/CartScreen").default}
-              options={{ title: "Cart Screen" }}
-            />
-            <Stack.Screen
               name="Checkout"
               getComponent={() =>
                 require("./src/screens/CheckoutScreen").default

@@ -11,7 +11,6 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import colors from "../theme/colors";
 import { useDispatch } from "react-redux";
-import { setSelectedAddress } from "../features/address/addressCart";
 
 export default function AddressesScreen({ navigation }) {
   const [addresses, setAddresses] = useState([]);
@@ -49,10 +48,7 @@ export default function AddressesScreen({ navigation }) {
         renderItem={({ item }) => (
           <TouchableOpacity
             style={styles.item}
-            onPress={() => {
-              dispatch(setSelectedAddress(item));
-              navigation.navigate("Checkout");
-            }}
+            onPress={() => dispatch(setSelectedAddress(address))}
           >
             <MaterialCommunityIcons
               name="map-marker-outline"

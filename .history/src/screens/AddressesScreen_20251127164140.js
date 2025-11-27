@@ -49,10 +49,7 @@ export default function AddressesScreen({ navigation }) {
         renderItem={({ item }) => (
           <TouchableOpacity
             style={styles.item}
-            onPress={() => {
-              dispatch(setSelectedAddress(item));
-              navigation.navigate("Checkout");
-            }}
+            onPress={() => dispatch(setSelectedAddress(item))}
           >
             <MaterialCommunityIcons
               name="map-marker-outline"

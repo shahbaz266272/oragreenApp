@@ -56,6 +56,25 @@ export default function CheckoutScreen({ navigation }) {
                   </Text>
                 )}
               </View>
+
+              {/* Quantity */}
+              <View style={styles.qtyRow}>
+                <TouchableOpacity
+                  style={styles.qtyButton}
+                  onPress={() => dispatch(decreaseQty(item._id))}
+                >
+                  <Text style={styles.qtyButtonText}>−</Text>
+                </TouchableOpacity>
+
+                <Text style={styles.qtyValue}>{item.quantity}</Text>
+
+                <TouchableOpacity
+                  style={styles.qtyButton}
+                  onPress={() => dispatch(increaseQty(item._id))}
+                >
+                  <Text style={styles.qtyButtonText}>+</Text>
+                </TouchableOpacity>
+              </View>
             </View>
           </View>
         ))
@@ -78,7 +97,7 @@ export default function CheckoutScreen({ navigation }) {
               .join(" ")}{" "}
             ({selectedAddress.type})
           </Text>
-          <Text style={styles.addressText}>{selectedAddress.content}</Text>
+
           <Text style={styles.addressText}>
             Apt {selectedAddress.apartment}, Line {selectedAddress.line},{" "}
             {selectedAddress.city}, {selectedAddress.province},{" "}
