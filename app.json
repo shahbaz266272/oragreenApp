@@ -1,6 +1,6 @@
 {
   "expo": {
-    "name": "ExpoSidebarApp",
+    "name": "Oragreen",
     "slug": "expo-sidebar-app",
     "version": "1.0.0",
     "orientation": "portrait",
@@ -13,13 +13,13 @@
     "assetBundlePatterns": ["**/*"],
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.yourcompany.exposidebarapp"
+      "bundleIdentifier": "com.oragreen.app"
     },
     "android": {
       "adaptiveIcon": {
         "backgroundColor": "#ffffff"
       },
-      "package": "com.yourcompany.exposidebarapp"
+      "package": "com.oragreen.app"
     },
     "web": {}
   }

@@ -2,34 +2,7 @@ import colors from "./src/theme/colors";
 import "react-native-gesture-handler";
 import React, { useEffect, useState, useCallback } from "react";
 import { Provider } from "react-redux";
-import { configureStore, createSlice } from "@reduxjs/toolkit";
 
-// Define a simple cart slice and store inline to avoid separate files
-const cartSlice = createSlice({
-  name: "cart",
-  initialState: { items: [] },
-  reducers: {
-    addToCart(state, action) {
-      const product = action.payload;
-      const idx = state.items.findIndex((it) => it.id === product.id);
-      if (idx > -1) {
-        state.items[idx].qty = (state.items[idx].qty || 1) + 1;
-      } else {
-        state.items.push({ ...product, qty: 1 });
-      }
-    },
-    removeFromCart(state, action) {
-      state.items = state.items.filter((it) => it.id !== action.payload);
-    },
-    clearCart(state) {
-      state.items = [];
-    },
-  },
-});
-
-const store = configureStore({
-  reducer: { cart: cartSlice.reducer },
-});
 import { NavigationContainer } from "@react-navigation/native";
 import { createDrawerNavigator } from "@react-navigation/drawer";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
@@ -45,6 +18,8 @@ import DrawerIcon from "./src/components/DrawerIcon";
 import HeaderLogo from "./src/components/HeaderLogo";
 // removed direct MaterialCommunityIcons import - components use icons instead
 import CustomDrawerContent from "./src/components/CustomDrawerContent";
+import { store } from "./src/store/store";
+import AddAddressScreen from "./src/screens/AddAddressScreen";
 
 const Drawer = createDrawerNavigator();
 const Stack = createNativeStackNavigator();
@@ -219,6 +194,13 @@ export default function App() {
               name="Address"
               component={AddressesScreen}
               options={{ title: "Addresses" }}
+            />
+            <Stack.Screen
+              name="AddAddress"
+              getComponent={() =>
+                require("./src/screens/AddAddressScreen").default
+              }
+              options={{ title: "Add Address" }}
             />
             <Stack.Screen
               name="Checkout"

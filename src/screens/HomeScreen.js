@@ -7,13 +7,43 @@ import {
   TouchableOpacity,
   Image,
   Dimensions,
+  ActivityIndicator,
 } from "react-native";
 import { StatusBar } from "expo-status-bar";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
+import Feather from "@expo/vector-icons/Feather";
+
 import colors from "../theme/colors";
 import ProductCarousel from "../components/ProductCarousel";
+import { useSelector } from "react-redux";
+import productService from "../services/productService";
 
 export default function HomeScreen({ navigation }) {
+  // Set up header with cart icon
+  const cartItems = useSelector((state) => state.cart.items);
+  const cartCount = cartItems.length;
+
+  React.useLayoutEffect(() => {
+    navigation.setOptions({
+      headerRight: () => (
+        <TouchableOpacity
+          onPress={() => navigation.navigate("Checkout")}
+          style={{ marginRight: 16 }}
+        >
+          <View style={{ position: "relative" }}>
+            <Feather name="shopping-cart" size={24} color="white" />
+            {cartCount > 0 && (
+              <View style={styles.cartBadge}>
+                <Text style={styles.cartBadgeText}>
+                  {cartCount > 9 ? "9+" : cartCount}
+                </Text>
+              </View>
+            )}
+          </View>
+        </TouchableOpacity>
+      ),
+    });
+  }, [navigation, cartCount]);
   const { width } = Dimensions.get("window");
   const sliderPadding = 24; // same as card padding
   const gap = 12; // gap between slides
@@ -41,6 +71,27 @@ export default function HomeScreen({ navigation }) {
     }, 3500);
     return () => clearInterval(interval);
   }, [activeIndex, images.length, slideWidth, gap]);
+
+  const managerId = "68f37574e486969ccd8109b1"; // your adminId
+  const token = "BearerTokenHere"; // your JWT token
+
+  const [products, setProducts] = useState([]);
+  const [loadingProducts, setLoadingProducts] = useState(true);
+
+  useEffect(() => {
+    const fetchProducts = async () => {
+      try {
+        const data = await productService.getProducts(managerId, token);
+        setProducts(data); // docs[]
+      } catch (err) {
+        console.log(err);
+      } finally {
+        setLoadingProducts(false);
+      }
+    };
+
+    fetchProducts();
+  }, []);
   return (
     <View style={styles.container}>
       <StatusBar style="light" />
@@ -82,152 +133,44 @@ export default function HomeScreen({ navigation }) {
             ))}
           </View>
         </View>
-
-        {(() => {
-          const offers = [
-            {
-              id: "1",
-              name: "Pure Mineral Water - 6 Pack",
-              image:
-                "https://www.shutterstock.com/image-vector/transparent-realistic-vector-mineral-water-600nw-2104613384.jpg",
-              price: 170,
-              originalPrice: 200,
-              variant: "pack",
-              discount: "-15%",
-            },
-            {
-              id: "2",
-              name: "Drinking Water - 250ml",
-              image:
-                "https://www.shutterstock.com/image-vector/transparent-realistic-vector-mineral-water-600nw-2104613384.jpg",
-              price: 172.73,
-              originalPrice: 200,
-              variant: "250ml",
-              discount: "-13.6%",
-            },
-            {
-              id: "3",
-              name: "Mineral Water - 1.5 Litre",
-              image:
-                "https://www.shutterstock.com/image-vector/transparent-realistic-vector-mineral-water-600nw-2104613384.jpg",
-              price: 520,
-              originalPrice: 600,
-              variant: "1.5 litre",
-              discount: "-13.3%",
-            },
-            {
-              id: "4",
-              name: "Drinking Water - 250 ml (Pack of 2)",
-              image:
-                "https://www.shutterstock.com/image-vector/transparent-realistic-vector-mineral-water-600nw-2104613384.jpg",
-              price: 172.73,
-              originalPrice: 200,
-              variant: "250ml",
-              discount: "-13.6%",
-            },
-            {
-              id: "5",
-              name: "Mineral Water - 1.5 Litre (Bundle)",
-              image:
-                "https://www.shutterstock.com/image-vector/transparent-realistic-vector-mineral-water-600nw-2104613384.jpg",
-              price: 520,
-              originalPrice: 600,
-              variant: "1.5 litre",
-              discount: "-13.3%",
-            },
-          ];
-
-          // products can be separate from offers; for demo we use same items
-          const products = offers.map((item) => ({ ...item }));
-
-          return (
-            <ProductCarousel
-              title="Offers"
-              items={offers}
-              products={products}
-              onPressItem={(item) =>
-                navigation.navigate("ProductDetail", { item })
-              }
-              containerHeight={220}
-            />
-          );
-        })()}
-
-        <View style={styles.cardsContainer}>
-          <TouchableOpacity style={styles.card}>
-            <View style={styles.cardIcon}>
-              <MaterialCommunityIcons
-                name="cellphone"
-                size={32}
-                color={colors.primary}
-              />
-            </View>
-            <Text style={styles.cardTitle}>Features</Text>
-            <Text style={styles.cardDescription}>
-              Explore amazing features of this app
-            </Text>
-          </TouchableOpacity>
-
-          <TouchableOpacity style={styles.card}>
-            <View style={styles.cardIcon}>
-              <MaterialCommunityIcons
-                name="rocket"
-                size={32}
-                color={colors.primary}
-              />
-            </View>
-            <Text style={styles.cardTitle}>Performance</Text>
-            <Text style={styles.cardDescription}>
-              Built with performance in mind
-            </Text>
-          </TouchableOpacity>
-
-          <TouchableOpacity style={styles.card}>
-            <View style={styles.cardIcon}>
-              <MaterialCommunityIcons
-                name="palette"
-                size={32}
-                color={colors.primary}
-              />
-            </View>
-            <Text style={styles.cardTitle}>Design</Text>
-            <Text style={styles.cardDescription}>
-              Beautiful and intuitive UI
-            </Text>
-          </TouchableOpacity>
-
-          <TouchableOpacity style={styles.card}>
-            <View style={styles.cardIcon}>
-              <MaterialCommunityIcons
-                name="flash"
-                size={32}
-                color={colors.primary}
-              />
-            </View>
-            <Text style={styles.cardTitle}>Fast</Text>
-            <Text style={styles.cardDescription}>
-              Lightning-fast experience
-            </Text>
-          </TouchableOpacity>
-        </View>
-
-        <View style={styles.infoSection}>
-          <Text style={styles.infoTitle}>Getting Started</Text>
-          <Text style={styles.infoText}>
-            • Open the sidebar to navigate between screens
-          </Text>
-          <Text style={styles.infoText}>
-            • Explore different features and settings
-          </Text>
-          <Text style={styles.infoText}>
-            • Customize your experience in Settings
-          </Text>
-        </View>
+        {loadingProducts ? (
+          <ActivityIndicator
+            size="large"
+            color="blue"
+            style={{ marginTop: 20 }}
+          />
+        ) : (
+          <ProductCarousel
+            title="Products All"
+            items={products.filter((data) => data?.sku?.price?.discount > 0)}
+            products={products}
+            onPressItem={(item) =>
+              navigation.navigate("ProductDetail", { item })
+            }
+            containerHeight={220}
+          />
+        )}
       </ScrollView>
     </View>
   );
 }
 const styles = StyleSheet.create({
+  cartBadge: {
+    position: "absolute",
+    right: -8,
+    top: -8,
+    backgroundColor: colors.danger || "#ff5252",
+    borderRadius: 10,
+    width: 20,
+    height: 20,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  cartBadgeText: {
+    color: colors.white,
+    fontSize: 12,
+    fontWeight: "bold",
+  },
   container: {
     flex: 1,
     backgroundColor: colors.light,

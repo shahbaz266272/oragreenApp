@@ -10,6 +10,8 @@ import {
 } from "react-native";
 import colors from "../theme/colors";
 import { useDispatch } from "react-redux";
+import { getImageUrl } from "../services/utils";
+import { addToCart } from "../features/cart/cartSlice";
 
 export default function ProductCarousel({
   items = [],
@@ -22,15 +24,16 @@ export default function ProductCarousel({
   gridTitle = "Products",
 }) {
   const { width } = Dimensions.get("window");
-  const cardWidth = Math.round((width - 20 - 24) / 3);
+  const dispatch = useDispatch();
   const effectiveCarouselHeight =
     typeof containerHeight !== "undefined" ? containerHeight : carouselHeight;
   const imageHeight = Math.round(effectiveCarouselHeight * 0.44);
   const effectiveGridTitle = gridTitle || "Products";
   const gridItems =
-    Array.isArray(products) && products.length > 0 ? products : items;
-  const dispatch = useDispatch();
-
+    Array.isArray(products) && products.length > 0 ? products : [];
+  const handleAdd = (item) => {
+    dispatch(addToCart(item));
+  };
   return (
     <View style={styles.container}>
       <View style={styles.header}>
@@ -48,51 +51,59 @@ export default function ProductCarousel({
           showsHorizontalScrollIndicator={false}
           contentContainerStyle={styles.scrollContent}
         >
-          {items.map((item) => (
-            <View key={item.id} style={[styles.card, { width: cardWidth }]}>
-              <TouchableOpacity
-                style={styles.cardContent}
-                onPress={() => onPressItem && onPressItem(item)}
-                activeOpacity={0.85}
-              >
-                {item.discount ? (
-                  <View style={styles.badge}>
-                    <Text style={styles.badgeText}>{item.discount}</Text>
+          {items?.length > 0 ? (
+            items?.map((item) => (
+              <View key={item.id + 223} style={[styles.card, { width: 190 }]}>
+                <TouchableOpacity
+                  style={styles.cardContent}
+                  onPress={() => onPressItem && onPressItem(item)}
+                  activeOpacity={0.85}
+                >
+                  {item?.sku?.price?.discount > 0 ? (
+                    <View style={styles.badge}>
+                      <Text style={styles.badgeText}>
+                        -{item?.sku?.price?.discount}.0%
+                      </Text>
+                    </View>
+                  ) : null}
+                  <Image
+                    source={{ uri: getImageUrl(item?.image?.path) }}
+                    style={[styles.image, { height: imageHeight }]}
+                  />
+                  <View style={styles.priceRow}>
+                    <Text style={styles.price}>
+                      Rs {item?.sku?.price?.sale}
+                    </Text>
+                    {item.sku?.price?.base ? (
+                      <Text style={styles.originalPrice}>
+                        Rs {item.sku?.price?.base}
+                      </Text>
+                    ) : null}
                   </View>
-                ) : null}
-                <Image
-                  source={{ uri: item.image }}
-                  style={[styles.image, { height: imageHeight }]}
-                />
-                <View style={styles.priceRow}>
-                  <Text style={styles.price}>Rs {item.price}</Text>
-                  {item.originalPrice ? (
-                    <Text style={styles.originalPrice}>
-                      Rs {item.originalPrice}
+                  {item.title ? (
+                    <Text
+                      style={styles.productName}
+                      numberOfLines={1}
+                      ellipsizeMode="tail"
+                    >
+                      {item.title}
                     </Text>
                   ) : null}
-                </View>
-                {item.name ? (
-                  <Text
-                    style={styles.productName}
-                    numberOfLines={1}
-                    ellipsizeMode="tail"
-                  >
-                    {item.name}
+                  <Text style={styles.variant}>
+                    Quantity: {item?.sku?.quantity}
                   </Text>
-                ) : null}
-                <Text style={styles.variant}>{item.variant}</Text>
-              </TouchableOpacity>
-              <TouchableOpacity
-                style={styles.addButton}
-                onPress={() =>
-                  dispatch({ type: "cart/addToCart", payload: item })
-                }
-              >
-                <Text style={styles.addText}>Add To Cart</Text>
-              </TouchableOpacity>
-            </View>
-          ))}
+                </TouchableOpacity>
+                <TouchableOpacity
+                  style={styles.addButton}
+                  onPress={() => handleAdd(item)}
+                >
+                  <Text style={styles.addText}>Add To Cart</Text>
+                </TouchableOpacity>
+              </View>
+            ))
+          ) : (
+            <Text>NO Offers Found!</Text>
+          )}
         </ScrollView>
       </View>
 
@@ -119,42 +130,51 @@ export default function ProductCarousel({
                   onPress={() => onPressItem && onPressItem(item)}
                   activeOpacity={0.85}
                 >
-                  {item.discount ? (
+                  {item?.sku?.price?.discount > 0 ? (
                     <View style={styles.badge}>
-                      <Text style={styles.badgeText}>{item.discount}</Text>
+                      <Text style={styles.badgeText}>
+                        {item?.sku?.price?.base > 0
+                          ? `-${(
+                              (1 -
+                                item?.sku?.price?.sale /
+                                  item?.sku?.price?.base) *
+                              100
+                            ).toFixed(1)}%`
+                          : "0%"}
+                      </Text>
                     </View>
                   ) : null}
                   <Image
-                    source={{ uri: item.image }}
+                    source={{ uri: getImageUrl(item?.image?.path) }}
                     style={[
                       styles.image,
                       { height: Math.round(effectiveCarouselHeight * 0.45) },
                     ]}
                   />
                   <View style={styles.priceRow}>
-                    <Text style={styles.price}>Rs {item.price}</Text>
-                    {item.originalPrice ? (
+                    <Text style={styles.price}>Rs {item.sku?.price?.sale}</Text>
+                    {item?.sku?.price?.base ? (
                       <Text style={styles.originalPrice}>
-                        Rs {item.originalPrice}
+                        Rs {item.sku?.price?.base}
                       </Text>
                     ) : null}
                   </View>
-                  {item.name ? (
+                  {item.title ? (
                     <Text
                       style={styles.productName}
                       numberOfLines={1}
                       ellipsizeMode="tail"
                     >
-                      {item.name}
+                      {item.title}
                     </Text>
                   ) : null}
-                  <Text style={styles.variant}>{item.variant}</Text>
+                  <Text style={styles.variant}>
+                    Quantity: {item.sku?.quantity}
+                  </Text>
                 </TouchableOpacity>
                 <TouchableOpacity
                   style={styles.addButton}
-                  onPress={() =>
-                    dispatch({ type: "cart/addToCart", payload: item })
-                  }
+                  onPress={() => handleAdd(item)}
                 >
                   <Text style={styles.addText}>Add To Cart</Text>
                 </TouchableOpacity>
@@ -264,7 +284,7 @@ const styles = StyleSheet.create({
     backgroundColor: colors.primary,
     marginHorizontal: 6,
     borderRadius: 6,
-    paddingVertical: 4,
+    paddingVertical: 6,
     alignItems: "center",
     margin: 6,
   },
