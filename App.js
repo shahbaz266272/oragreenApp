@@ -85,28 +85,7 @@ export default function App() {
           ),
         }}
       />
-      <Drawer.Screen
-        name="Settings"
-        component={SettingsScreen}
-        options={{
-          drawerLabel: "Settings",
-          title: "Settings",
-          drawerIcon: ({ color, size, focused }) => (
-            <DrawerIcon name="cog" focused={focused} color={color} size={18} />
-          ),
-        }}
-      />
-      <Drawer.Screen
-        name="Favourites"
-        component={FavoritesScreen}
-        options={{
-          drawerLabel: "Favourites",
-          title: "My Favourites",
-          drawerIcon: ({ color, size, focused }) => (
-            <DrawerIcon name="star" focused={focused} color={color} size={18} />
-          ),
-        }}
-      />
+
       <Drawer.Screen
         name="Profile"
         component={ProfileScreen}
@@ -181,6 +160,20 @@ export default function App() {
               options={{ headerShown: false }}
             />
             <Stack.Screen
+              name="LoginScreen"
+              getComponent={() => require("./src/screens/LoginScreen").default}
+              options={({ route }) => ({
+                title: "Login",
+              })}
+            />
+            <Stack.Screen
+              name="VerifyOtpScreen"
+              getComponent={() => require("./src/screens/VerifyOTP").default}
+              options={({ route }) => ({
+                title: "Verify OTP",
+              })}
+            />
+            <Stack.Screen
               name="ProductDetail"
               getComponent={() =>
                 require("./src/screens/ProductDetailScreen").default
@@ -200,6 +193,11 @@ export default function App() {
                 require("./src/screens/AddAddressScreen").default
               }
               options={{ title: "Add Address" }}
+            />
+            <Stack.Screen
+              name="OrderSuccess"
+              getComponent={() => require("./src/screens/OrderSucess").default}
+              options={{ title: "Order Success" }}
             />
             <Stack.Screen
               name="cartScreen"

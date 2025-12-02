@@ -1,25 +1,89 @@
-import React from "react";
-import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
+import React, { useEffect, useState } from "react";
+import { View, Text, StyleSheet, TouchableOpacity, Button } from "react-native";
 import { MaterialIcons } from "@expo/vector-icons";
 import colors from "../theme/colors";
 import {
   DrawerContentScrollView,
   DrawerItemList,
   DrawerItem,
+  useDrawerStatus,
 } from "@react-navigation/drawer";
+import { useNavigation } from "@react-navigation/native";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export default function CustomDrawerContent(props) {
+  const navigation = useNavigation();
+  const status = useDrawerStatus(); // <-- returns 'open' | 'closed'
+  const [user, setUser] = useState(null);
+  const [isLoggedIn, setIsLoggedIn] = useState(null);
+  const [loggedOutPress, setloggedOutPress] = useState(false);
+  useEffect(() => {
+    const loadUser = async () => {
+      try {
+        const userString = await AsyncStorage.getItem("user");
+        if (userString) {
+          setUser(JSON.parse(userString));
+        }
+      } catch (error) {
+        console.log("Error loading user:", error);
+      }
+    };
+    const loadLoggedIN = async () => {
+      try {
+        const userString = await AsyncStorage.getItem("isLoggedIn");
+        if (userString) {
+          setIsLoggedIn(JSON.parse(userString));
+        }
+      } catch (error) {
+        console.log("Error loading isloggedin:", error);
+      }
+    };
+
+    loadUser();
+    loadLoggedIN();
+  }, [status, loggedOutPress]);
+  useEffect(() => {
+    const openListener = navigation.addListener("drawerOpen", () => {
+      console.log("Drawer is OPEN");
+      loadUserData(); // Call your function when drawer opens
+    });
+
+    const closeListener = navigation.addListener("drawerClose", () => {
+      console.log("Drawer is CLOSED");
+    });
+
+    return () => {
+      openListener();
+      closeListener();
+    };
+  }, []);
+  // console.log(user, isLoggedIn, "juzarva");
   return (
     <View style={styles.container}>
       <View style={styles.drawerHeader}>
         <View style={styles.profileSection}>
           <View style={styles.avatar}>
-            <Text style={styles.avatarText}>JD</Text>
+            <Text style={styles.avatarText}>
+              {user?.firstName?.split("")[0]}
+              {user?.lastName?.split("")[0]}
+            </Text>
           </View>
-          <View style={styles.userInfo}>
-            <Text style={styles.userName}>John Doe</Text>
-            <Text style={styles.userEmail}>john.doe@example.com</Text>
-          </View>
+          {user ? (
+            <View style={styles.userInfo}>
+              <Text style={styles.userName}>
+                {user?.firstName} {user?.middleName} {user?.lastName}
+              </Text>
+              <Text style={styles.userEmail}>{user?.mobile}</Text>
+            </View>
+          ) : (
+            <View style={{}}>
+              <Button
+                title="Login"
+                color={colors.white}
+                onPress={() => navigation.navigate("LoginScreen")}
+              />
+            </View>
+          )}
         </View>
       </View>
 
@@ -71,12 +135,32 @@ export default function CustomDrawerContent(props) {
       </DrawerContentScrollView>
 
       <View style={styles.footer}>
-        <TouchableOpacity style={styles.logoutButton}>
-          <View style={styles.logoutInner}>
-            <MaterialIcons name="logout" size={18} color={colors.danger} />
-            <Text style={styles.logoutText}> Logout</Text>
-          </View>
-        </TouchableOpacity>
+        {isLoggedIn && (
+          <TouchableOpacity
+            style={styles.logoutButton}
+            onPress={async () => {
+              try {
+                await AsyncStorage.removeItem("jwt");
+                await AsyncStorage.removeItem("user");
+                await AsyncStorage.removeItem("isLoggedIn");
+
+                setloggedOutPress((prev) => !prev); // re-render
+
+                navigation.reset({
+                  index: 0,
+                  routes: [{ name: "Main" }],
+                });
+              } catch (error) {
+                console.log("Logout Error:", error);
+              }
+            }}
+          >
+            <View style={styles.logoutInner}>
+              <MaterialIcons name="logout" size={18} color={colors.danger} />
+              <Text style={styles.logoutText}> Logout</Text>
+            </View>
+          </TouchableOpacity>
+        )}
         <Text style={styles.versionText}>Version 1.0.0</Text>
       </View>
     </View>

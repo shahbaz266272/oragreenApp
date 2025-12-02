@@ -17,7 +17,6 @@ export default function CheckoutScreen({ navigation }) {
 
   const cartItems = useSelector((state) => state.cart.items);
   const selectedAddress = useSelector((state) => state.selectedAddress?.item);
-  console.log(selectedAddress, "1--tye");
   /** ------------ PRICE CALCULATIONS ------------ */
   const subtotal = cartItems.reduce(
     (sum, item) => sum + item.sku.price.sale * item.quantity,
@@ -125,7 +124,7 @@ export default function CheckoutScreen({ navigation }) {
         title="Place Order"
         color={colors.primary}
         disabled={!cartItems.length || !selectedAddress}
-        onPress={() => navigation.navigate("Orders")}
+        onPress={() => navigation.navigate("OrderSuccess")}
       />
     </ScrollView>
   );
