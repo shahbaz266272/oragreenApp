@@ -11,6 +11,9 @@ const selectedAddressSlice = createSlice({
     setSelectedAddress(state, action) {
       state.item = action.payload;
     },
+    setSelectedAddress(state, action) {
+      state.item = action.payload;
+    },
 
     clearSelectedAddress(state) {
       state.item = null;

@@ -73,7 +73,7 @@ export default function CartScreen({ navigation }) {
 
                 <View style={styles.priceRow}>
                   <Text style={styles.price}>Rs {item.sku?.price?.sale}</Text>
-                  {item.sku?.price?.base > 0 && (
+                  {item.sku?.price?.discount > 0 && (
                     <Text style={styles.originalPrice}>
                       Rs {item.sku?.price?.base}
                     </Text>

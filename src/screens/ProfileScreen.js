@@ -16,8 +16,11 @@ import {
   ActivityIndicator,
 } from "react-native";
 import { useNavigation } from "@react-navigation/native";
+import { useSelector } from "react-redux";
 
 export default function ProfileScreen() {
+  const loginItems = useSelector((state) => state.loginInfo?.item);
+
   const [name, setName] = useState("John Doe");
   const [email, setEmail] = useState("john.doe@example.com");
   const [notifications, setNotifications] = useState(true);
@@ -77,7 +80,7 @@ export default function ProfileScreen() {
             "x-api-key":
               "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0eXBlIjoiYXBwIiwidGl0bGUiOiJ0b2tlbiBmb3IgYXBpIGtleSIsImlhdCI6MTYzNjQ0ODczOH0.zmvB5qcMd5k_-A2igZjpZppjc-C_PYVb2Saapo38Gi4",
 
-            Authorization: `Bearer ${token}`,
+            Authorization: `Bearer ${loginItems?.jwt}`,
           },
         }
       );

@@ -15,7 +15,7 @@ import axios from "axios";
 
 export default function CheckoutScreen({ navigation }) {
   const dispatch = useDispatch();
-
+  const loginItems = useSelector((state) => state.loginInfo?.item);
   const cartItems = useSelector((state) => state.cart.items);
   const selectedAddress = useSelector((state) => state.selectedAddress?.item);
   /** ------------ PRICE CALCULATIONS ------------ */
@@ -26,11 +26,7 @@ export default function CheckoutScreen({ navigation }) {
 
   const deliveryFee = 200;
   const total = subtotal + deliveryFee;
-  console.log(
-    selectedAddress,
 
-    "--cartItems"
-  );
   /** ------------ UI ------------ */
   const createOrderBody = () => {
     if (!selectedAddress || cartItems.length === 0) return null;
@@ -48,7 +44,7 @@ export default function CheckoutScreen({ navigation }) {
       subTotal: subTotal,
       tax: 0,
       flatDiscount: 0,
-      userId: "6912e56e89b24a3c8193042b", // <---- your logged-in user ID
+      userId: loginItems?.user?._id,
       shippingInfo: {
         firstName: selectedAddress.firstName,
         lastName: selectedAddress.lastName,
@@ -65,7 +61,7 @@ export default function CheckoutScreen({ navigation }) {
           type: "Point",
           coordinates: [33.6951, 72.9724],
         },
-        userId: "6912e56e89b24a3c8193042b",
+        userId: loginItems?.user?._id,
       },
       items: cartItems.map((item) => ({
         productId: item._id,
@@ -93,14 +89,13 @@ export default function CheckoutScreen({ navigation }) {
 
     try {
       const response = await axios.post(
-        "https://apioragreen.najeebmart.com/api/v1/app/user/orders/6912e56e89b24a3c8193042b",
+        `https://apioragreen.najeebmart.com/api/v1/app/user/orders/${loginItems?.user?._id}`,
         body,
         {
           headers: {
             "x-api-key":
               "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0eXBlIjoiYXBwIiwidGl0bGUiOiJ0b2tlbiBmb3IgYXBpIGtleSIsImlhdCI6MTYzNjQ0ODczOH0.zmvB5qcMd5k_-A2igZjpZppjc-C_PYVb2Saapo38Gi4",
-            Authorization:
-              "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7InJlZ2lzdGVyZWRBdCI6IjIwMjUtMTEtMTFUMDc6MTM6MTUuODI4WiIsImlzQWN0aXZlIjp0cnVlLCJyb2xlIjoidXNlciIsIl9pZCI6IjY5MTJlNTZlODliMjRhM2M4MTkzMDQyYiIsIm1vYmlsZSI6IjkyMzM1MzYzNjkyMSIsImNyZWF0ZWRBdCI6IjIwMjUtMTEtMTFUMDc6Mjc6NDIuMjI4WiIsInVwZGF0ZWRBdCI6IjIwMjUtMTEtMTFUMDg6NDU6MTAuNTI1WiIsIl9fdiI6MCwicGhvbmVPdHAiOiIiLCJkZXZpY2VUb2tlbiI6IjY4ZjM3NTc0ZTQ4Njk2OWNjZDgxMDliMSIsImxhc3RMb2dpbiI6MTc2Mjg1MDcxMDUyNH0sImlhdCI6MTc2Mjg1MDcxMCwiZXhwIjoxNzY1NDQyNzEwfQ.CG2Nh-As62GBKgGjIZytel9sXnrXgNr1nitEX24rcfs",
+            Authorization: `Bearer ${loginItems?.jwt}`,
             "Content-Type": "application/json",
           },
         }
@@ -136,12 +131,17 @@ export default function CheckoutScreen({ navigation }) {
               </Text>
 
               <View style={styles.priceRow}>
-                <Text style={styles.price}>Rs {item.sku.price.sale}</Text>
-                {item.sku.price.base > 0 && (
+                <Text style={styles.price}>Rs-{item.sku.price.sale}</Text>
+                {item.sku.price.discount > 0 && (
                   <Text style={styles.originalPrice}>
                     Rs {item.sku.price.base}
                   </Text>
                 )}
+              </View>
+              <View style={styles.priceRow}>
+                <Text style={styles.price}>Quantity:</Text>
+
+                <Text style={styles.price}>{item.quantity}</Text>
               </View>
             </View>
           </View>

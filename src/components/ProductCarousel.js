@@ -36,89 +36,94 @@ export default function ProductCarousel({
   };
   return (
     <View style={styles.container}>
-      <View style={styles.header}>
-        <Text style={styles.headerTitle}>{title}</Text>
-        <TouchableOpacity style={styles.seeMoreButton} onPress={() => {}}>
+      {items?.length > 0 && (
+        <View style={styles.header}>
+          <Text style={styles.headerTitle}>{title}</Text>
+          {/* <TouchableOpacity style={styles.seeMoreButton} onPress={() => {}}>
           <Text style={styles.seeMoreText}>See More</Text>
-        </TouchableOpacity>
-      </View>
+        </TouchableOpacity> */}
+        </View>
+      )}
 
-      <View
-        style={[styles.carouselWrapper, { height: effectiveCarouselHeight }]}
-      >
-        <ScrollView
-          horizontal
-          showsHorizontalScrollIndicator={false}
-          contentContainerStyle={styles.scrollContent}
+      {items?.length > 0 && (
+        <View
+          style={[styles.carouselWrapper, { height: effectiveCarouselHeight }]}
         >
-          {items?.length > 0 ? (
-            items?.map((item) => (
-              <View key={item.id + 223} style={[styles.card, { width: 190 }]}>
-                <TouchableOpacity
-                  style={styles.cardContent}
-                  onPress={() => onPressItem && onPressItem(item)}
-                  activeOpacity={0.85}
+          <ScrollView
+            horizontal
+            showsHorizontalScrollIndicator={false}
+            contentContainerStyle={styles.scrollContent}
+          >
+            {items?.length > 0 ? (
+              items?.map((item) => (
+                <View
+                  key={item.id + Math.random()}
+                  style={[styles.card, { width: 190 }]}
                 >
-                  {item?.sku?.price?.discount > 0 ? (
-                    <View style={styles.badge}>
-                      <Text style={styles.badgeText}>
-                        -{item?.sku?.price?.discount}.0%
+                  <TouchableOpacity
+                    style={styles.cardContent}
+                    onPress={() => onPressItem && onPressItem(item)}
+                    activeOpacity={0.85}
+                  >
+                    {item?.sku?.price?.discount > 0 ? (
+                      <View style={styles.badge}>
+                        <Text style={styles.badgeText}>
+                          -{item?.sku?.price?.discount}.0%
+                        </Text>
+                      </View>
+                    ) : null}
+                    <Image
+                      source={{ uri: getImageUrl(item?.image?.path) }}
+                      style={[styles.image, { height: imageHeight }]}
+                    />
+                    <View style={styles.priceRow}>
+                      <Text style={styles.price}>
+                        Rs {item?.sku?.price?.sale}
                       </Text>
+                      {item.sku?.price?.base ? (
+                        <Text style={styles.originalPrice}>
+                          Rs {item.sku?.price?.base}
+                        </Text>
+                      ) : null}
                     </View>
-                  ) : null}
-                  <Image
-                    source={{ uri: getImageUrl(item?.image?.path) }}
-                    style={[styles.image, { height: imageHeight }]}
-                  />
-                  <View style={styles.priceRow}>
-                    <Text style={styles.price}>
-                      Rs {item?.sku?.price?.sale}
-                    </Text>
-                    {item.sku?.price?.base ? (
-                      <Text style={styles.originalPrice}>
-                        Rs {item.sku?.price?.base}
+                    {item.title ? (
+                      <Text
+                        style={styles.productName}
+                        numberOfLines={1}
+                        ellipsizeMode="tail"
+                      >
+                        {item.title}
                       </Text>
                     ) : null}
-                  </View>
-                  {item.title ? (
-                    <Text
-                      style={styles.productName}
-                      numberOfLines={1}
-                      ellipsizeMode="tail"
-                    >
-                      {item.title}
-                    </Text>
-                  ) : null}
-                  <Text style={styles.variant}>
-                    Quantity: {item?.sku?.quantity}
-                  </Text>
-                </TouchableOpacity>
-                <TouchableOpacity
-                  style={styles.addButton}
-                  onPress={() => handleAdd(item)}
-                >
-                  <Text style={styles.addText}>Add To Cart</Text>
-                </TouchableOpacity>
-              </View>
-            ))
-          ) : (
-            <Text>NO Offers Found!</Text>
-          )}
-        </ScrollView>
-      </View>
+                    <Text style={styles.variant}>Quantity: 1</Text>
+                  </TouchableOpacity>
+                  <TouchableOpacity
+                    style={styles.addButton}
+                    onPress={() => handleAdd(item)}
+                  >
+                    <Text style={styles.addText}>Add To Cart</Text>
+                  </TouchableOpacity>
+                </View>
+              ))
+            ) : (
+              <Text>NO Offers Found!</Text>
+            )}
+          </ScrollView>
+        </View>
+      )}
 
       {showGrid ? (
         <View style={styles.gridSection}>
           <View style={styles.header}>
             <Text style={styles.headerTitle}>{effectiveGridTitle}</Text>
-            <TouchableOpacity style={styles.seeMoreButton} onPress={() => {}}>
+            {/* <TouchableOpacity style={styles.seeMoreButton} onPress={() => {}}>
               <Text style={styles.seeMoreText}>See More</Text>
-            </TouchableOpacity>
+            </TouchableOpacity> */}
           </View>
           <View style={styles.gridContainer}>
             {gridItems.map((item, index) => (
               <View
-                key={`grid-${item.id}`}
+                key={`grid-${Math.random()}`}
                 style={[
                   styles.card,
                   styles.gridCard,
@@ -153,7 +158,7 @@ export default function ProductCarousel({
                   />
                   <View style={styles.priceRow}>
                     <Text style={styles.price}>Rs {item.sku?.price?.sale}</Text>
-                    {item?.sku?.price?.base ? (
+                    {item?.sku?.price?.discount ? (
                       <Text style={styles.originalPrice}>
                         Rs {item.sku?.price?.base}
                       </Text>
@@ -168,9 +173,7 @@ export default function ProductCarousel({
                       {item.title}
                     </Text>
                   ) : null}
-                  <Text style={styles.variant}>
-                    Quantity: {item.sku?.quantity}
-                  </Text>
+                  <Text style={styles.variant}>Quantity: 1</Text>
                 </TouchableOpacity>
                 <TouchableOpacity
                   style={styles.addButton}
@@ -245,7 +248,7 @@ const styles = StyleSheet.create({
   image: {
     width: "100%",
     height: 80,
-    resizeMode: "cover",
+    resizeMode: "contain",
     marginBottom: 6,
   },
   priceRow: {

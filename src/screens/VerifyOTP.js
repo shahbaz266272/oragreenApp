@@ -9,11 +9,13 @@ import {
 } from "react-native";
 import axios from "axios";
 import AsyncStorage from "@react-native-async-storage/async-storage"; // ✅ Import AsyncStorage
+import { setLoginInfo } from "../features/loginInfo/LoginInfo";
+import { useDispatch } from "react-redux";
 
 export default function VerifyOtpScreen({ route, navigation }) {
   const { _id, deviceToken } = route.params;
   const [otp, setOtp] = useState("");
-
+  const dispatch = useDispatch();
   const handleVerify = async () => {
     if (!otp) {
       Alert.alert("Error", "Please enter OTP");
@@ -36,6 +38,13 @@ export default function VerifyOtpScreen({ route, navigation }) {
       const { jwt, user } = response.data.data;
 
       // ✅ Save JWT and user info to AsyncStorage
+      dispatch(
+        setLoginInfo({
+          jwt: jwt,
+          user: user,
+          isLoggedIN: true,
+        })
+      );
       await AsyncStorage.setItem("jwt", jwt);
       await AsyncStorage.setItem("user", JSON.stringify(user));
       await AsyncStorage.setItem("isLoggedIn", JSON.stringify("true"));
