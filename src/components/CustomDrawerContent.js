@@ -11,10 +11,13 @@ import {
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useNavigation } from "@react-navigation/native";
 import DrawerIcon from "./DrawerIcon";
+import { setLoginInfo } from "../features/loginInfo/LoginInfo";
+import { useDispatch } from "react-redux";
 
 export default function CustomDrawerContent(props) {
   const { navigation } = props; // <-- use the navigation prop directly
   const status = useDrawerStatus(); // <-- returns 'open' | 'closed'
+  const dispatch = useDispatch();
   const [user, setUser] = useState(null);
   const [isLoggedIn, setIsLoggedIn] = useState(null);
   const [loggedOutPress, setloggedOutPress] = useState(false);
@@ -153,7 +156,7 @@ export default function CustomDrawerContent(props) {
                 await AsyncStorage.removeItem("jwt");
                 await AsyncStorage.removeItem("user");
                 await AsyncStorage.removeItem("isLoggedIn");
-
+                dispatch(setLoginInfo(null));
                 setloggedOutPress((prev) => !prev); // re-render
 
                 navigation.reset({

@@ -37,18 +37,21 @@ export default function VerifyOtpScreen({ route, navigation }) {
         }
       );
 
-      const { jwt, user } = response.data.data;
+      const { jwt, user } = await response.data.data;
 
       // ✅ Save JWT and user info to AsyncStorage
       dispatch(
         setLoginInfo({
-          jwt: jwt,
-          user: user,
+          jwt: response.data.data?.jwt,
+          user: response.data.data?.user,
           isLoggedIN: true,
         })
       );
-      await AsyncStorage.setItem("jwt", jwt);
-      await AsyncStorage.setItem("user", JSON.stringify(user));
+      await AsyncStorage.setItem("jwt", response.data.data?.jwt);
+      await AsyncStorage.setItem(
+        "user",
+        JSON.stringify(response.data.data?.user)
+      );
       await AsyncStorage.setItem("isLoggedIn", JSON.stringify("true"));
 
       console.log("JWT and user saved locally:", jwt, user);

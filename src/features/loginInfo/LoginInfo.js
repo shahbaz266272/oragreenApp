@@ -4,7 +4,7 @@ const initialState = {
   item: null, // ✅ single selected address
 };
 
-const LoginInfoSlice = createSlice({
+const loginInfoSlice = createSlice({
   name: "loginInfo",
   initialState,
   reducers: {
@@ -18,6 +18,6 @@ const LoginInfoSlice = createSlice({
   },
 });
 
-export const { setLoginInfo, clearLoginInfo } = LoginInfoSlice.actions;
+export const { setLoginInfo, clearLoginInfo } = loginInfoSlice.actions;
 
-export default LoginInfoSlice.reducer;
+export default loginInfoSlice.reducer;

@@ -5,6 +5,7 @@ import {
   Button,
   TouchableOpacity,
   Image,
+  ScrollView,
 } from "react-native";
 import colors from "../theme/colors";
 import { useSelector, useDispatch } from "react-redux";
@@ -18,10 +19,12 @@ import {
 import { getImageUrl } from "../services/utils";
 import { useEffect, useState } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { clearLoginInfo, setLoginInfo } from "../features/loginInfo/LoginInfo";
 
 export default function CartScreen({ navigation }) {
   const dispatch = useDispatch();
   const cartItems = useSelector((state) => state.cart.items);
+  const loginItems = useSelector((state) => state.loginInfo?.item);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   useEffect(() => {
     const loadLoggedIN = async () => {
@@ -38,9 +41,9 @@ export default function CartScreen({ navigation }) {
 
     loadLoggedIN();
   }, []);
-  console.log(isLoggedIn, "--0-0isLoggedIn");
+  console.log(isLoggedIn, loginItems, "--0-0isLoggedIn");
   return (
-    <View style={styles.container}>
+    <ScrollView style={styles.container}>
       <Text style={styles.title}>Cart</Text>
 
       <View style={styles.listContainer}>
@@ -105,12 +108,12 @@ export default function CartScreen({ navigation }) {
         )}
       </View>
 
-      <View style={{ marginTop: 20 }}>
+      <View style={{ marginTop: 20, marginBottom: 30 }}>
         <TouchableOpacity
           style={[styles.actionButton]}
           activeOpacity={0.8}
           onPress={() =>
-            isLoggedIn
+            loginItems?.isLoggedIN
               ? cartItems?.length > 0
                 ? navigation.navigate("Checkout")
                 : navigation.navigate("Main")
@@ -122,7 +125,7 @@ export default function CartScreen({ navigation }) {
           </Text>
         </TouchableOpacity>
       </View>
-    </View>
+    </ScrollView>
   );
 }
 
@@ -155,6 +158,8 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: colors.light,
     padding: 16,
+    paddingBottom: 50,
+    overflow: "auto",
   },
   title: {
     fontSize: 20,

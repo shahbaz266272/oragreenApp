@@ -18,6 +18,7 @@ import { useState } from "react";
 export default function CheckoutScreen({ navigation }) {
   const dispatch = useDispatch();
   const loginItems = useSelector((state) => state.loginInfo?.item);
+  console.log(loginItems, "00");
   const cartItems = useSelector((state) => state.cart.items);
   const selectedAddress = useSelector((state) => state.selectedAddress?.item);
   const [loading, setLoading] = useState(false);
@@ -89,6 +90,7 @@ export default function CheckoutScreen({ navigation }) {
       alert("Missing address or cart items!");
       return;
     }
+    console.log(loginItems, loginItems?.user?._id, loginItems?.jwt);
     setLoading(true);
     try {
       const response = await axios.post(
@@ -216,12 +218,16 @@ export default function CheckoutScreen({ navigation }) {
       {loading ? (
         <ActivityIndicator size="large" color={colors.primary} />
       ) : (
-        <Button
-          title="Place Order"
-          color={colors.primary}
+        <TouchableOpacity
           disabled={!cartItems.length || !selectedAddress}
           onPress={placeOrder}
-        />
+          style={[
+            styles.placeOrderButton,
+            (!cartItems.length || !selectedAddress) && { opacity: 0.5 },
+          ]}
+        >
+          <Text style={styles.placeOrderButtonText}>Place Order</Text>
+        </TouchableOpacity>
       )}
     </ScrollView>
   );
@@ -374,5 +380,19 @@ const styles = StyleSheet.create({
 
   description: {
     color: colors.gray,
+  },
+  placeOrderButton: {
+    backgroundColor: colors.primary,
+    paddingVertical: 14,
+    borderRadius: 10,
+    alignItems: "center",
+    justifyContent: "center",
+    marginBottom: 40,
+  },
+
+  placeOrderButtonText: {
+    color: colors.white,
+    fontSize: 16,
+    fontWeight: "700",
   },
 });
