@@ -44,12 +44,11 @@ export default function LoginScreen({ navigation }) {
     }
 
     const formattedMobile = formatMobile(mobile);
-    console.log("Final formatted mobile →", formattedMobile);
 
     try {
       const response = await axios.post(
-        "http://localhost:8985/api/v1/app/user/register-login",
-        { mobile: formattedMobile },
+        "https://apioragreen.najeebmart.com/api/v1/app/user/register-login",
+        { mobile: formattedMobile, email: `user${Math.random()}@mail.com` },
         {
           headers: {
             "x-api-key":
@@ -58,10 +57,12 @@ export default function LoginScreen({ navigation }) {
           },
         }
       );
+      if (response) {
+        console.log(response, "-=-=");
+        const { _id, deviceToken } = response?.data?.data;
 
-      const { _id, deviceToken } = response.data?.data;
-
-      navigation.navigate("VerifyOtpScreen", { _id, deviceToken });
+        navigation.navigate("VerifyOtpScreen", { _id, deviceToken });
+      }
     } catch (error) {
       console.log(error);
       Alert.alert("Error", "Failed to send OTP");

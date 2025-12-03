@@ -8,11 +8,12 @@ import {
   DrawerItem,
   useDrawerStatus,
 } from "@react-navigation/drawer";
-import { useNavigation } from "@react-navigation/native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { useNavigation } from "@react-navigation/native";
+import DrawerIcon from "./DrawerIcon";
 
 export default function CustomDrawerContent(props) {
-  const navigation = useNavigation();
+  const { navigation } = props; // <-- use the navigation prop directly
   const status = useDrawerStatus(); // <-- returns 'open' | 'closed'
   const [user, setUser] = useState(null);
   const [isLoggedIn, setIsLoggedIn] = useState(null);
@@ -42,20 +43,17 @@ export default function CustomDrawerContent(props) {
     loadUser();
     loadLoggedIN();
   }, [status, loggedOutPress]);
+  const openListener = navigation.addListener("drawerOpen", () => {
+    console.log("Drawer is OPEN");
+    loadUserData(); // Call your function when drawer opens
+  });
+
+  const closeListener = navigation.addListener("drawerClose", () => {
+    console.log("Drawer is CLOSED");
+  });
   useEffect(() => {
-    const openListener = navigation.addListener("drawerOpen", () => {
-      console.log("Drawer is OPEN");
-      loadUserData(); // Call your function when drawer opens
-    });
-
-    const closeListener = navigation.addListener("drawerClose", () => {
-      console.log("Drawer is CLOSED");
-    });
-
-    return () => {
-      openListener();
-      closeListener();
-    };
+    openListener();
+    closeListener();
   }, []);
   // console.log(user, isLoggedIn, "juzarva");
   return (
@@ -79,7 +77,7 @@ export default function CustomDrawerContent(props) {
             <View style={{}}>
               <Button
                 title="Login"
-                color={colors.white}
+                color={colors.secondary}
                 onPress={() => navigation.navigate("LoginScreen")}
               />
             </View>
@@ -93,7 +91,26 @@ export default function CustomDrawerContent(props) {
         showsVerticalScrollIndicator={false}
       >
         <View style={styles.drawerSection}>
-          <DrawerItemList {...props} />
+          {!isLoggedIn ? (
+            <DrawerItem
+              label="Home"
+              icon={({ color, size }) => (
+                <DrawerIcon
+                  name="home"
+                  focused={true}
+                  color={color}
+                  size={20}
+                />
+              )}
+              onPress={() => {
+                navigation.closeDrawer();
+              }}
+              style={styles.drawerLabelF}
+              labelStyle={styles.drawerLabel}
+            />
+          ) : (
+            <DrawerItemList {...props} />
+          )}
         </View>
 
         <View style={styles.drawerSection}>
@@ -225,6 +242,10 @@ const styles = StyleSheet.create({
   },
   drawerLabel: {
     fontSize: 15,
+  },
+  drawerLabelF: {
+    fontSize: 15,
+    backgroundColor: colors.sidebarActiveBg,
   },
 
   footer: {

@@ -1,7 +1,7 @@
 // src/services/orderService.ts
 import axios from "axios";
 
-export const API_URL = "http://localhost:8985";
+export const API_URL = "https://apioragreen.najeebmart.com";
 const xApiKey =
   "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0eXBlIjoiYXBwIiwidGl0bGUiOiJ0b2tlbiBmb3IgYXBpIGtleSIsImlhdCI6MTYzNjQ0ODczOH0.zmvB5qcMd5k_-A2igZjpZppjc-C_PYVb2Saapo38Gi4";
 const token =

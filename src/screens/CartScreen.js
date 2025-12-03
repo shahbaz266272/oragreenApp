@@ -16,10 +16,29 @@ import {
 } from "../features/cart/cartSlice";
 
 import { getImageUrl } from "../services/utils";
+import { useEffect, useState } from "react";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export default function CartScreen({ navigation }) {
   const dispatch = useDispatch();
   const cartItems = useSelector((state) => state.cart.items);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  useEffect(() => {
+    const loadLoggedIN = async () => {
+      try {
+        const userString = await AsyncStorage.getItem("isLoggedIn");
+        if (userString) {
+          console.log(userString);
+          setIsLoggedIn(JSON.parse(userString) === "true" ? true : false);
+        }
+      } catch (error) {
+        console.log("Error loading isloggedin:", error);
+      }
+    };
+
+    loadLoggedIN();
+  }, []);
+  console.log(isLoggedIn, "--0-0isLoggedIn");
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Cart</Text>
@@ -91,9 +110,11 @@ export default function CartScreen({ navigation }) {
           style={[styles.actionButton]}
           activeOpacity={0.8}
           onPress={() =>
-            cartItems?.length > 0
-              ? navigation.navigate("Checkout")
-              : navigation.navigate("Main")
+            isLoggedIn
+              ? cartItems?.length > 0
+                ? navigation.navigate("Checkout")
+                : navigation.navigate("Main")
+              : navigation.navigate("LoginScreen")
           }
         >
           <Text style={styles.actionButtonText}>

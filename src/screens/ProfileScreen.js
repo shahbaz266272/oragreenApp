@@ -66,7 +66,7 @@ export default function ProfileScreen() {
       const token = await AsyncStorage.getItem("jwt"); // Store token when login
 
       const response = await axios.put(
-        `http://localhost:8985/api/v1/app/user/${user._id}`,
+        `https://apioragreen.najeebmart.com/api/v1/app/user/${user._id}`,
         {
           firstName,
           lastName,

@@ -22,7 +22,7 @@ export default function VerifyOtpScreen({ route, navigation }) {
 
     try {
       const response = await axios.post(
-        "http://localhost:8985/api/v1/app/user/verify-phone-otp",
+        "https://apioragreen.najeebmart.com/api/v1/app/user/verify-phone-otp",
         { otp, deviceToken, userId: _id },
         {
           headers: {
@@ -42,7 +42,10 @@ export default function VerifyOtpScreen({ route, navigation }) {
 
       console.log("JWT and user saved locally:", jwt, user);
 
-      navigation.replace("Main");
+      navigation.reset({
+        index: 0,
+        routes: [{ name: "Main" }],
+      });
     } catch (error) {
       console.log(error);
       Alert.alert("Error", "Invalid OTP");
