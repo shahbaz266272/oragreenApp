@@ -8,6 +8,8 @@ import {
   Button,
   Alert,
   Switch,
+  KeyboardAvoidingView,
+  Platform,
 } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import colors from "../theme/colors";
@@ -91,101 +93,106 @@ export default function AddAddressScreen({ navigation }) {
   };
 
   return (
-    <ScrollView contentContainerStyle={styles.container}>
-      {/* Personal Info */}
-      <Text style={styles.label}>First Name*</Text>
-      <TextInput
-        style={styles.input}
-        value={firstName}
-        onChangeText={setFirstName}
-      />
-
-      <Text style={styles.label}>Middle Name</Text>
-      <TextInput
-        style={styles.input}
-        value={middleName}
-        onChangeText={setMiddleName}
-      />
-
-      <Text style={styles.label}>Last Name*</Text>
-      <TextInput
-        style={styles.input}
-        value={lastName}
-        onChangeText={setLastName}
-      />
-
-      <Text style={styles.label}>Mobile*</Text>
-      <TextInput
-        style={styles.input}
-        value={mobile}
-        onChangeText={setMobile}
-        keyboardType="phone-pad"
-      />
-
-      <Text style={styles.label}>Email</Text>
-      <TextInput
-        style={styles.input}
-        value={email}
-        onChangeText={setEmail}
-        keyboardType="email-address"
-      />
-
-      {/* Address Info */}
-      <Text style={styles.label}>Line*</Text>
-      <TextInput style={styles.input} value={line} onChangeText={setLine} />
-
-      <Text style={styles.label}>City*</Text>
-      <TextInput style={styles.input} value={city} onChangeText={setCity} />
-
-      <Text style={styles.label}>Province</Text>
-      <TextInput
-        style={styles.input}
-        value={province}
-        onChangeText={setProvince}
-      />
-
-      <Text style={styles.label}>Country*</Text>
-      <TextInput
-        style={styles.input}
-        value={country}
-        onChangeText={setCountry}
-      />
-
-      <Text style={styles.label}>Apartment*</Text>
-      <TextInput
-        style={styles.input}
-        value={apartment}
-        onChangeText={setApartment}
-      />
-
-      <Text style={styles.label}>Type* (Home / Work / Other)</Text>
-      <TextInput style={styles.input} value={type} onChangeText={setType} />
-
-      <Text style={styles.label}>Gender*</Text>
-      <TextInput style={styles.input} value={gender} onChangeText={setGender} />
-
-      <Text style={styles.label}>Content</Text>
-      <TextInput
-        style={styles.input}
-        value={content}
-        onChangeText={setContent}
-        multiline
-      />
-
-      {/* Default Toggle */}
-      <View style={styles.switchContainer}>
-        <Text style={styles.label}>Set as Default</Text>
-        <Switch value={isDefault} onValueChange={setIsDefault} />
-      </View>
-
-      <View style={{ marginTop: 24 }}>
-        <Button
-          title="Save Address"
-          color={colors.primary}
-          onPress={handleSave}
+    <KeyboardAvoidingView
+      style={{ flex: 1 }}
+      behavior={Platform.OS === "ios" ? "padding" : "height"}
+    >
+      <ScrollView contentContainerStyle={styles.container}>
+        {/* Personal Info */}
+        <Text style={styles.label}>First Name*</Text>
+        <TextInput
+          style={styles.input}
+          value={firstName}
+          onChangeText={setFirstName}
         />
-      </View>
-    </ScrollView>
+
+        <Text style={styles.label}>Middle Name</Text>
+        <TextInput
+          style={styles.input}
+          value={middleName}
+          onChangeText={setMiddleName}
+        />
+
+        <Text style={styles.label}>Last Name*</Text>
+        <TextInput
+          style={styles.input}
+          value={lastName}
+          onChangeText={setLastName}
+        />
+
+        <Text style={styles.label}>Mobile*</Text>
+        <TextInput
+          style={styles.input}
+          value={mobile}
+          onChangeText={setMobile}
+          keyboardType="phone-pad"
+        />
+
+        <Text style={styles.label}>Email</Text>
+        <TextInput
+          style={styles.input}
+          value={email}
+          onChangeText={setEmail}
+          keyboardType="email-address"
+        />
+
+        {/* Address Info */}
+        <Text style={styles.label}>Line*</Text>
+        <TextInput style={styles.input} value={line} onChangeText={setLine} />
+
+        <Text style={styles.label}>City*</Text>
+        <TextInput style={styles.input} value={city} onChangeText={setCity} />
+
+        <Text style={styles.label}>Province</Text>
+        <TextInput
+          style={styles.input}
+          value={province}
+          onChangeText={setProvince}
+        />
+
+        <Text style={styles.label}>Country*</Text>
+        <TextInput
+          style={styles.input}
+          value={country}
+          onChangeText={setCountry}
+        />
+
+        <Text style={styles.label}>Apartment*</Text>
+        <TextInput
+          style={styles.input}
+          value={apartment}
+          onChangeText={setApartment}
+        />
+
+        <Text style={styles.label}>Type* (Home / Work / Other)</Text>
+        <TextInput style={styles.input} value={type} onChangeText={setType} />
+
+        <Text style={styles.label}>Gender*</Text>
+        <TextInput style={styles.input} value={gender} onChangeText={setGender} />
+
+        <Text style={styles.label}>Content</Text>
+        <TextInput
+          style={styles.input}
+          value={content}
+          onChangeText={setContent}
+          multiline
+        />
+
+        {/* Default Toggle */}
+        <View style={styles.switchContainer}>
+          <Text style={styles.label}>Set as Default</Text>
+          <Switch value={isDefault} onValueChange={setIsDefault} />
+        </View>
+
+        <View style={{ marginTop: 24, marginBottom: 40 }}>
+          <Button
+            title="Save Address"
+            color={colors.primary}
+            onPress={handleSave}
+          />
+        </View>
+      </ScrollView>
+    </KeyboardAvoidingView>
   );
 }
 
