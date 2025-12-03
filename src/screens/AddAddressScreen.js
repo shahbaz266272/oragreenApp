@@ -168,7 +168,11 @@ export default function AddAddressScreen({ navigation }) {
         <TextInput style={styles.input} value={type} onChangeText={setType} />
 
         <Text style={styles.label}>Gender*</Text>
-        <TextInput style={styles.input} value={gender} onChangeText={setGender} />
+        <TextInput
+          style={styles.input}
+          value={gender}
+          onChangeText={setGender}
+        />
 
         <Text style={styles.label}>Content</Text>
         <TextInput
