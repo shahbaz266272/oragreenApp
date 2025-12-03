@@ -20,7 +20,7 @@ export default function OrdersScreen() {
     orderService
       .getUserOrders()
       .then((orders) => {
-        setOrders(orders?.data || []);
+        setOrders(orders?.data?.reverse() || []);
       })
       .catch((err) => {
         console.error(err);
