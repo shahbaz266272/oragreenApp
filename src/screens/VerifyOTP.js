@@ -6,6 +6,7 @@ import {
   TouchableOpacity,
   StyleSheet,
   Alert,
+  ActivityIndicator,
 } from "react-native";
 import axios from "axios";
 import AsyncStorage from "@react-native-async-storage/async-storage"; // ✅ Import AsyncStorage
@@ -15,13 +16,14 @@ import { useDispatch } from "react-redux";
 export default function VerifyOtpScreen({ route, navigation }) {
   const { _id, deviceToken } = route.params;
   const [otp, setOtp] = useState("");
+  const [loading, setLoading] = useState(false);
   const dispatch = useDispatch();
   const handleVerify = async () => {
     if (!otp) {
       Alert.alert("Error", "Please enter OTP");
       return;
     }
-
+    setLoading(true);
     try {
       const response = await axios.post(
         "https://apioragreen.najeebmart.com/api/v1/app/user/verify-phone-otp",
@@ -55,6 +57,8 @@ export default function VerifyOtpScreen({ route, navigation }) {
     } catch (error) {
       console.log(error);
       Alert.alert("Error", "Invalid OTP");
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -68,8 +72,16 @@ export default function VerifyOtpScreen({ route, navigation }) {
         value={otp}
         onChangeText={setOtp}
       />
-      <TouchableOpacity style={styles.button} onPress={handleVerify}>
-        <Text style={styles.buttonText}>Verify OTP</Text>
+      <TouchableOpacity
+        style={styles.button}
+        onPress={handleVerify}
+        disabled={loading}
+      >
+        {loading ? (
+          <ActivityIndicator color="#fff" />
+        ) : (
+          <Text style={styles.buttonText}>Verify OTP</Text>
+        )}
       </TouchableOpacity>
     </View>
   );

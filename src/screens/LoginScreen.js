@@ -6,11 +6,13 @@ import {
   TouchableOpacity,
   StyleSheet,
   Alert,
+  ActivityIndicator,
 } from "react-native";
 import axios from "axios";
 
 export default function LoginScreen({ navigation }) {
   const [mobile, setMobile] = useState("");
+  const [loading, setLoading] = useState(false);
   const formatMobile = (input) => {
     let number = input.replace(/\D/g, ""); // remove all non-numeric chars
 
@@ -44,7 +46,7 @@ export default function LoginScreen({ navigation }) {
     }
 
     const formattedMobile = formatMobile(mobile);
-
+    setLoading(true);
     try {
       const response = await axios.post(
         "https://apioragreen.najeebmart.com/api/v1/app/user/register-login",
@@ -66,6 +68,8 @@ export default function LoginScreen({ navigation }) {
     } catch (error) {
       console.log(error);
       Alert.alert("Error", "Failed to send OTP");
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -79,8 +83,16 @@ export default function LoginScreen({ navigation }) {
         value={mobile}
         onChangeText={setMobile}
       />
-      <TouchableOpacity style={styles.button} onPress={handleLogin}>
-        <Text style={styles.buttonText}>Send OTP</Text>
+      <TouchableOpacity
+        style={styles.button}
+        onPress={handleLogin}
+        disabled={loading}
+      >
+        {loading ? (
+          <ActivityIndicator color="#fff" />
+        ) : (
+          <Text style={styles.buttonText}>Send OTP</Text>
+        )}
       </TouchableOpacity>
     </View>
   );

@@ -6,18 +6,21 @@ import {
   TouchableOpacity,
   Image,
   ScrollView,
+  ActivityIndicator,
 } from "react-native";
 import colors from "../theme/colors";
 import { useSelector, useDispatch } from "react-redux";
 import { increaseQty, decreaseQty } from "../features/cart/cartSlice";
 import { getImageUrl } from "../services/utils";
 import axios from "axios";
+import { useState } from "react";
 
 export default function CheckoutScreen({ navigation }) {
   const dispatch = useDispatch();
   const loginItems = useSelector((state) => state.loginInfo?.item);
   const cartItems = useSelector((state) => state.cart.items);
   const selectedAddress = useSelector((state) => state.selectedAddress?.item);
+  const [loading, setLoading] = useState(false);
   /** ------------ PRICE CALCULATIONS ------------ */
   const subtotal = cartItems.reduce(
     (sum, item) => sum + item.sku.price.sale * item.quantity,
@@ -86,7 +89,7 @@ export default function CheckoutScreen({ navigation }) {
       alert("Missing address or cart items!");
       return;
     }
-
+    setLoading(true);
     try {
       const response = await axios.post(
         `https://apioragreen.najeebmart.com/api/v1/app/user/orders/${loginItems?.user?._id}`,
@@ -107,6 +110,8 @@ export default function CheckoutScreen({ navigation }) {
     } catch (error) {
       console.log("ORDER ERROR:", error.response?.data || error.message);
       alert("Failed to place order");
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -208,12 +213,16 @@ export default function CheckoutScreen({ navigation }) {
       </View>
 
       {/* ================= PLACE ORDER ================= */}
-      <Button
-        title="Place Order"
-        color={colors.primary}
-        disabled={!cartItems.length || !selectedAddress}
-        onPress={placeOrder}
-      />
+      {loading ? (
+        <ActivityIndicator size="large" color={colors.primary} />
+      ) : (
+        <Button
+          title="Place Order"
+          color={colors.primary}
+          disabled={!cartItems.length || !selectedAddress}
+          onPress={placeOrder}
+        />
+      )}
     </ScrollView>
   );
 }
