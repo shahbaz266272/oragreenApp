@@ -24,6 +24,8 @@ export default function CustomDrawerContent(props) {
         const userString = await AsyncStorage.getItem("user");
         if (userString) {
           setUser(JSON.parse(userString));
+        } else {
+          setUser(null);
         }
       } catch (error) {
         console.log("Error loading user:", error);
@@ -34,6 +36,8 @@ export default function CustomDrawerContent(props) {
         const userString = await AsyncStorage.getItem("isLoggedIn");
         if (userString) {
           setIsLoggedIn(JSON.parse(userString));
+        } else {
+          setIsLoggedIn(false);
         }
       } catch (error) {
         console.log("Error loading isloggedin:", error);
@@ -43,18 +47,7 @@ export default function CustomDrawerContent(props) {
     loadUser();
     loadLoggedIN();
   }, [status, loggedOutPress]);
-  const openListener = navigation.addListener("drawerOpen", () => {
-    console.log("Drawer is OPEN");
-    loadUserData(); // Call your function when drawer opens
-  });
 
-  const closeListener = navigation.addListener("drawerClose", () => {
-    console.log("Drawer is CLOSED");
-  });
-  useEffect(() => {
-    openListener();
-    closeListener();
-  }, []);
   // console.log(user, isLoggedIn, "juzarva");
   return (
     <View style={styles.container}>
@@ -165,7 +158,7 @@ export default function CustomDrawerContent(props) {
 
                 navigation.reset({
                   index: 0,
-                  routes: [{ name: "Main" }],
+                  routes: [{ name: "Home" }],
                 });
               } catch (error) {
                 console.log("Logout Error:", error);

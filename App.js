@@ -8,9 +8,9 @@ import {
   createDrawerNavigator,
   useDrawerStatus,
 } from "@react-navigation/drawer";
-import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import { View } from "react-native";
+import { View, TouchableOpacity } from "react-native";
 import * as SplashScreen from "expo-splash-screen";
+import { MaterialIcons } from "@expo/vector-icons";
 import HomeScreen from "./src/screens/HomeScreen";
 import ProfileScreen from "./src/screens/ProfileScreen";
 import SettingsScreen from "./src/screens/SettingsScreen";
@@ -25,7 +25,6 @@ import { store } from "./src/store/store";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const Drawer = createDrawerNavigator();
-const Stack = createNativeStackNavigator();
 
 // Keep the splash screen visible while we fetch resources
 
@@ -142,6 +141,136 @@ export default function App() {
           ),
         }}
       />
+      <Drawer.Screen
+        name="LoginScreen"
+        getComponent={() => require("./src/screens/LoginScreen").default}
+        options={({ navigation }) => ({
+          drawerItemStyle: { display: "none" },
+          title: "Login",
+          headerRight: () => (
+            <TouchableOpacity
+              onPress={() => navigation.goBack()}
+              style={{ marginRight: 15 }}
+            >
+              <MaterialIcons name="arrow-back" size={24} color={colors.white} />
+            </TouchableOpacity>
+          ),
+        })}
+      />
+      <Drawer.Screen
+        name="VerifyOtpScreen"
+        getComponent={() => require("./src/screens/VerifyOTP").default}
+        options={({ navigation }) => ({
+          drawerItemStyle: { display: "none" },
+          title: "Verify OTP",
+          headerRight: () => (
+            <TouchableOpacity
+              onPress={() => navigation.goBack()}
+              style={{ marginRight: 15 }}
+            >
+              <MaterialIcons name="arrow-back" size={24} color={colors.white} />
+            </TouchableOpacity>
+          ),
+        })}
+      />
+      <Drawer.Screen
+        name="ProductDetail"
+        getComponent={() =>
+          require("./src/screens/ProductDetailScreen").default
+        }
+        options={({ route, navigation }) => ({
+          drawerItemStyle: { display: "none" },
+          title: route?.params?.item?.variant || "Product",
+          headerRight: () => (
+            <TouchableOpacity
+              onPress={() => navigation.goBack()}
+              style={{ marginRight: 15 }}
+            >
+              <MaterialIcons name="arrow-back" size={24} color={colors.white} />
+            </TouchableOpacity>
+          ),
+        })}
+      />
+      <Drawer.Screen
+        name="Address"
+        component={AddressesScreen}
+        options={({ navigation }) => ({
+          drawerItemStyle: { display: "none" },
+          title: "Addresses",
+          headerRight: () => (
+            <TouchableOpacity
+              onPress={() => navigation.goBack()}
+              style={{ marginRight: 15 }}
+            >
+              <MaterialIcons name="arrow-back" size={24} color={colors.white} />
+            </TouchableOpacity>
+          ),
+        })}
+      />
+      <Drawer.Screen
+        name="AddAddress"
+        getComponent={() => require("./src/screens/AddAddressScreen").default}
+        options={({ navigation }) => ({
+          drawerItemStyle: { display: "none" },
+          title: "Add Address",
+          headerRight: () => (
+            <TouchableOpacity
+              onPress={() => navigation.goBack()}
+              style={{ marginRight: 15 }}
+            >
+              <MaterialIcons name="arrow-back" size={24} color={colors.white} />
+            </TouchableOpacity>
+          ),
+        })}
+      />
+      <Drawer.Screen
+        name="OrderSuccess"
+        getComponent={() => require("./src/screens/OrderSucess").default}
+        options={({ navigation }) => ({
+          drawerItemStyle: { display: "none" },
+          title: "Order Success",
+          headerRight: () => (
+            <TouchableOpacity
+              onPress={() => navigation.goBack()}
+              style={{ marginRight: 15 }}
+            >
+              <MaterialIcons name="arrow-back" size={24} color={colors.white} />
+            </TouchableOpacity>
+          ),
+        })}
+      />
+      <Drawer.Screen
+        name="cartScreen"
+        getComponent={() => require("./src/screens/CartScreen").default}
+        options={({ navigation }) => ({
+          drawerItemStyle: { display: "none" },
+          title: "Cart Screen",
+          headerRight: () => (
+            <TouchableOpacity
+              onPress={() => navigation.goBack()}
+              style={{ marginRight: 15 }}
+            >
+              <MaterialIcons name="arrow-back" size={24} color={colors.white} />
+            </TouchableOpacity>
+          ),
+        })}
+      />
+      <Drawer.Screen
+        name="Checkout"
+        getComponent={() => require("./src/screens/CheckoutScreen").default}
+        options={({ navigation }) => ({
+          drawerItemStyle: { display: "none" },
+          title: "Checkout",
+          headerRight: () => (
+            <TouchableOpacity
+              onPress={() => navigation.goBack()}
+              style={{ marginRight: 15 }}
+            >
+              <MaterialIcons name="arrow-back" size={24} color={colors.white} />
+            </TouchableOpacity>
+          ),
+        })}
+      />
     </Drawer.Navigator>
   );
 
@@ -149,82 +278,7 @@ export default function App() {
     <Provider store={store}>
       <NavigationContainer>
         <View style={{ flex: 1 }} onLayout={onLayoutRootView}>
-          <Stack.Navigator
-            initialRouteName="Main"
-            screenOptions={{
-              headerStyle: {
-                backgroundColor: colors.primary,
-              },
-              headerTintColor: colors.white,
-              headerTitleStyle: {
-                fontWeight: "bold",
-              },
-              headerTitle: (props) => <HeaderLogo title={props.children} />,
-            }}
-          >
-            <Stack.Screen
-              name="Main"
-              component={DrawerNavigator}
-              options={{ headerShown: false }}
-            />
-            <Stack.Screen
-              name="LoginScreen"
-              getComponent={() => require("./src/screens/LoginScreen").default}
-              options={({ route }) => ({
-                title: "Login",
-              })}
-            />
-            <Stack.Screen
-              name="VerifyOtpScreen"
-              getComponent={() => require("./src/screens/VerifyOTP").default}
-              options={({ route }) => ({
-                title: "Verify OTP",
-              })}
-            />
-            <Stack.Screen
-              name="ProductDetail"
-              getComponent={() =>
-                require("./src/screens/ProductDetailScreen").default
-              }
-              options={({ route }) => ({
-                title: route?.params?.item?.variant || "Product",
-              })}
-            />
-            <Stack.Screen
-              name="Address"
-              component={AddressesScreen}
-              options={{ title: "Addresses" }}
-            />
-            <Stack.Screen
-              name="AddAddress"
-              getComponent={() =>
-                require("./src/screens/AddAddressScreen").default
-              }
-              options={{ title: "Add Address" }}
-            />
-            <Stack.Screen
-              name="OrderSuccess"
-              getComponent={() => require("./src/screens/OrderSucess").default}
-              options={{ title: "Order Success" }}
-            />
-            <Stack.Screen
-              name="cartScreen"
-              getComponent={() => require("./src/screens/CartScreen").default}
-              options={{ title: "Cart Screen" }}
-            />
-            <Stack.Screen
-              name="Checkout"
-              getComponent={() =>
-                require("./src/screens/CheckoutScreen").default
-              }
-              options={{ title: "Checkout" }}
-            />
-            <Stack.Screen
-              name="Orders"
-              getComponent={() => require("./src/screens/OrdersScreen").default}
-              options={{ title: "My Orders" }}
-            />
-          </Stack.Navigator>
+          <DrawerNavigator />
         </View>
       </NavigationContainer>
     </Provider>

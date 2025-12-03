@@ -51,10 +51,7 @@ export default function VerifyOtpScreen({ route, navigation }) {
 
       console.log("JWT and user saved locally:", jwt, user);
 
-      navigation.reset({
-        index: 0,
-        routes: [{ name: "Main" }],
-      });
+      navigation.navigate("Home");
     } catch (error) {
       console.log(error);
       Alert.alert("Error", "Invalid OTP");
