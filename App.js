@@ -4,7 +4,10 @@ import React, { useEffect, useState, useCallback } from "react";
 import { Provider } from "react-redux";
 
 import { NavigationContainer } from "@react-navigation/native";
-import { createDrawerNavigator } from "@react-navigation/drawer";
+import {
+  createDrawerNavigator,
+  useDrawerStatus,
+} from "@react-navigation/drawer";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { View } from "react-native";
 import * as SplashScreen from "expo-splash-screen";
@@ -19,6 +22,7 @@ import HeaderLogo from "./src/components/HeaderLogo";
 // removed direct MaterialCommunityIcons import - components use icons instead
 import CustomDrawerContent from "./src/components/CustomDrawerContent";
 import { store } from "./src/store/store";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const Drawer = createDrawerNavigator();
 const Stack = createNativeStackNavigator();
@@ -28,24 +32,28 @@ const Stack = createNativeStackNavigator();
 export default function App() {
   const [appIsReady, setAppIsReady] = useState(false);
 
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+
   useEffect(() => {
-    async function prepare() {
+    async function loadApp() {
       try {
-        // Prevent auto-hide of the native splash screen
         await SplashScreen.preventAutoHideAsync();
-        // Pre-load other resources (fonts, API calls, etc.) if needed
-        // Simulate loading other resources or initialization
-        await new Promise((resolve) => setTimeout(resolve, 2000));
+
+        // 🔥 Load login state from async storage
+        const value = await AsyncStorage.getItem("isLoggedIn");
+        console.log(value);
+        setIsLoggedIn(value === "true" ? true : false);
+
+        await new Promise((resolve) => setTimeout(resolve, 1000));
       } catch (e) {
         console.warn(e);
       } finally {
         setAppIsReady(true);
       }
     }
-
-    prepare();
+    loadApp();
   }, []);
-
+  console.log(isLoggedIn, "--");
   const onLayoutRootView = useCallback(async () => {
     if (appIsReady) {
       // This tells the splash screen to hide immediately after the root view
@@ -85,28 +93,7 @@ export default function App() {
           ),
         }}
       />
-      <Drawer.Screen
-        name="Settings"
-        component={SettingsScreen}
-        options={{
-          drawerLabel: "Settings",
-          title: "Settings",
-          drawerIcon: ({ color, size, focused }) => (
-            <DrawerIcon name="cog" focused={focused} color={color} size={18} />
-          ),
-        }}
-      />
-      <Drawer.Screen
-        name="Favourites"
-        component={FavoritesScreen}
-        options={{
-          drawerLabel: "Favourites",
-          title: "My Favourites",
-          drawerIcon: ({ color, size, focused }) => (
-            <DrawerIcon name="star" focused={focused} color={color} size={18} />
-          ),
-        }}
-      />
+
       <Drawer.Screen
         name="Profile"
         component={ProfileScreen}
@@ -181,6 +168,20 @@ export default function App() {
               options={{ headerShown: false }}
             />
             <Stack.Screen
+              name="LoginScreen"
+              getComponent={() => require("./src/screens/LoginScreen").default}
+              options={({ route }) => ({
+                title: "Login",
+              })}
+            />
+            <Stack.Screen
+              name="VerifyOtpScreen"
+              getComponent={() => require("./src/screens/VerifyOTP").default}
+              options={({ route }) => ({
+                title: "Verify OTP",
+              })}
+            />
+            <Stack.Screen
               name="ProductDetail"
               getComponent={() =>
                 require("./src/screens/ProductDetailScreen").default
@@ -200,6 +201,11 @@ export default function App() {
                 require("./src/screens/AddAddressScreen").default
               }
               options={{ title: "Add Address" }}
+            />
+            <Stack.Screen
+              name="OrderSuccess"
+              getComponent={() => require("./src/screens/OrderSucess").default}
+              options={{ title: "Order Success" }}
             />
             <Stack.Screen
               name="cartScreen"
