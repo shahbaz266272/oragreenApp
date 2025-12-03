@@ -152,7 +152,7 @@ export default function App() {
               onPress={() => navigation.goBack()}
               style={{ marginRight: 15 }}
             >
-              <MaterialIcons name="arrow-back" size={24} color={colors.white} />
+              <MaterialIcons name="close" size={24} color={colors.white} />
             </TouchableOpacity>
           ),
         })}
@@ -168,7 +168,7 @@ export default function App() {
               onPress={() => navigation.goBack()}
               style={{ marginRight: 15 }}
             >
-              <MaterialIcons name="arrow-back" size={24} color={colors.white} />
+              <MaterialIcons name="close" size={24} color={colors.white} />
             </TouchableOpacity>
           ),
         })}
@@ -186,7 +186,7 @@ export default function App() {
               onPress={() => navigation.goBack()}
               style={{ marginRight: 15 }}
             >
-              <MaterialIcons name="arrow-back" size={24} color={colors.white} />
+              <MaterialIcons name="close" size={24} color={colors.white} />
             </TouchableOpacity>
           ),
         })}
@@ -202,7 +202,7 @@ export default function App() {
               onPress={() => navigation.goBack()}
               style={{ marginRight: 15 }}
             >
-              <MaterialIcons name="arrow-back" size={24} color={colors.white} />
+              <MaterialIcons name="close" size={24} color={colors.white} />
             </TouchableOpacity>
           ),
         })}
@@ -218,7 +218,7 @@ export default function App() {
               onPress={() => navigation.goBack()}
               style={{ marginRight: 15 }}
             >
-              <MaterialIcons name="arrow-back" size={24} color={colors.white} />
+              <MaterialIcons name="close" size={24} color={colors.white} />
             </TouchableOpacity>
           ),
         })}
@@ -234,7 +234,7 @@ export default function App() {
               onPress={() => navigation.goBack()}
               style={{ marginRight: 15 }}
             >
-              <MaterialIcons name="arrow-back" size={24} color={colors.white} />
+              <MaterialIcons name="close" size={24} color={colors.white} />
             </TouchableOpacity>
           ),
         })}
@@ -250,7 +250,7 @@ export default function App() {
               onPress={() => navigation.goBack()}
               style={{ marginRight: 15 }}
             >
-              <MaterialIcons name="arrow-back" size={24} color={colors.white} />
+              <MaterialIcons name="close" size={24} color={colors.white} />
             </TouchableOpacity>
           ),
         })}
@@ -266,7 +266,7 @@ export default function App() {
               onPress={() => navigation.goBack()}
               style={{ marginRight: 15 }}
             >
-              <MaterialIcons name="arrow-back" size={24} color={colors.white} />
+              <MaterialIcons name="close" size={24} color={colors.white} />
             </TouchableOpacity>
           ),
         })}
