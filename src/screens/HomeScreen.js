@@ -127,9 +127,9 @@ export default function HomeScreen({ navigation }) {
             {loading ? (
               <ActivityIndicator />
             ) : (
-              banners.map((item) => (
+              banners.map((item, idx) => (
                 <View
-                  key={Math.random()}
+                  key={item?.id ?? item?._id ?? idx}
                   style={{ width: slideWidth, marginRight: gap }}
                 >
                   <Image

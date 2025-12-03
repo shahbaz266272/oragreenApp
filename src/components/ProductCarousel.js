@@ -55,9 +55,9 @@ export default function ProductCarousel({
             contentContainerStyle={styles.scrollContent}
           >
             {items?.length > 0 ? (
-              items?.map((item) => (
+              items?.map((item, index) => (
                 <View
-                  key={item.id + Math.random()}
+                  key={item?.id ?? item?._id ?? `item-${index}`}
                   style={[styles.card, { width: 190 }]}
                 >
                   <TouchableOpacity
@@ -123,7 +123,7 @@ export default function ProductCarousel({
           <View style={styles.gridContainer}>
             {gridItems.map((item, index) => (
               <View
-                key={`grid-${Math.random()}`}
+                key={`grid-${item?.id ?? item?._id ?? index}`}
                 style={[
                   styles.card,
                   styles.gridCard,
