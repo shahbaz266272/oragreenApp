@@ -14,9 +14,11 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { MaterialIcons } from "@expo/vector-icons";
 import axios from "axios";
 import colors from "../theme/colors";
+import { useSelector } from "react-redux";
 
 export default function SettingsScreen() {
   const [user, setUser] = useState(null);
+  const loginItems = useSelector((state) => state.loginInfo?.item);
 
   // Edit Modal States
   const [editVisible, setEditVisible] = useState(false);
@@ -72,7 +74,7 @@ export default function SettingsScreen() {
             "x-api-key":
               "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0eXBlIjoiYXBwIiwidGl0bGUiOiJ0b2tlbiBmb3IgYXBpIGtleSIsImlhdCI6MTYzNjQ0ODczOH0.zmvB5qcMd5k_-A2igZjpZppjc-C_PYVb2Saapo38Gi4",
 
-            Authorization: `Bearer ${token}`,
+            Authorization: `Bearer ${loginItems?.jwt}`,
           },
         }
       );

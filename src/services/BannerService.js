@@ -13,39 +13,24 @@ const loadAddresses = async () => {
     console.log("Error loading addresses", e);
   }
 };
-const loadUsers = async () => {
-  try {
-    const jsonValue = await AsyncStorage.getItem("user");
-    console.log(jsonValue);
-    return JSON.parse(jsonValue);
-  } catch (e) {
-    console.log("Error loading addresses", e);
-  }
-};
-console.log(loadAddresses(), "p[p[p");
-loadUsers();
-const orderService = {
-  getUserOrders: async () => {
+const bannerService = {
+  getBanners: async () => {
     const tokenva = await loadAddresses();
-    const userVa = await loadUsers();
-    console.log(`${API_URL}/api/v1/app/user/orders/${userVa?._id}`, "ural");
+
     try {
-      const response = await axios.get(
-        `${API_URL}/api/v1/app/user/orders/${userVa?._id}`,
-        {
-          headers: {
-            "x-api-key": xApiKey,
-            Authorization: `Bearer ${tokenva}`,
-            "Content-Type": "application/json",
-          },
-        }
-      );
+      const response = await axios.get(`${API_URL}/api/v1/app/banners`, {
+        headers: {
+          "x-api-key": xApiKey,
+          Authorization: `Bearer ${tokenva}`,
+          "Content-Type": "application/json",
+        },
+      });
 
       // Adjust according to the actual API response structure
       return response.data || [];
     } catch (error) {
       console.error(
-        "❌ Error fetching user orders:",
+        "❌ Error fetching user banners:",
         error.response?.data || error.message
       );
       throw error;
@@ -53,4 +38,4 @@ const orderService = {
   },
 };
 
-export default orderService;
+export default bannerService;

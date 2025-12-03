@@ -17,6 +17,8 @@ import colors from "../theme/colors";
 import ProductCarousel from "../components/ProductCarousel";
 import { useSelector } from "react-redux";
 import productService from "../services/productService";
+import bannerService from "../services/BannerService";
+import { getImageUrl } from "../services/utils";
 
 export default function HomeScreen({ navigation }) {
   // Set up header with cart icon
@@ -51,47 +53,57 @@ export default function HomeScreen({ navigation }) {
   const slideWidth = sliderWidth - gap; // width of each slide (leaves gap at right side)
   const [activeIndex, setActiveIndex] = useState(0);
   const scrollRef = useRef(null);
-  const images = [
-    "https://plus.unsplash.com/premium_photo-1763466939715-c2efc8499f3b?q=80&w=687&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-    "https://plus.unsplash.com/premium_photo-1763466939715-c2efc8499f3b?q=80&w=687&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-    "https://plus.unsplash.com/premium_photo-1763466939715-c2efc8499f3b?q=80&w=687&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-    "https://plus.unsplash.com/premium_photo-1763466939715-c2efc8499f3b?q=80&w=687&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-  ];
-
-  useEffect(() => {
-    const interval = setInterval(() => {
-      const next = (activeIndex + 1) % images.length;
-      setActiveIndex(next);
-      if (scrollRef.current) {
-        scrollRef.current.scrollTo({
-          x: next * (slideWidth + gap),
-          animated: true,
-        });
-      }
-    }, 3500);
-    return () => clearInterval(interval);
-  }, [activeIndex, images.length, slideWidth, gap]);
 
   const managerId = "68f37574e486969ccd8109b1"; // your adminId
   const token = "BearerTokenHere"; // your JWT token
 
   const [products, setProducts] = useState([]);
   const [loadingProducts, setLoadingProducts] = useState(true);
+  const [banners, setBanners] = useState([]);
+  const [loading, setLoading] = useState(false); // ✅ Loader state
+
+  const fetchProducts = async () => {
+    try {
+      const data = await productService.getProducts(managerId, token);
+      setProducts(data);
+    } catch (err) {
+      console.log(err);
+    } finally {
+      setLoadingProducts(false);
+    }
+  };
+
+  const getBanners = () => {
+    setLoading(true); // start loader
+    bannerService
+      .getBanners()
+      .then((banners) => {
+        setBanners(banners?.data || []);
+        setLoading(false);
+      })
+      .catch((err) => {
+        setLoading(false);
+      })
+      .finally(() => setLoading(false)); // stop loader
+  };
 
   useEffect(() => {
-    const fetchProducts = async () => {
-      try {
-        const data = await productService.getProducts(managerId, token);
-        setProducts(data); // docs[]
-      } catch (err) {
-        console.log(err);
-      } finally {
-        setLoadingProducts(false);
-      }
-    };
-
+    getBanners();
     fetchProducts();
   }, []);
+  // useEffect(() => {
+  //   const interval = setInterval(() => {
+  //     const next = (activeIndex + 1) % banners.length;
+  //     setActiveIndex(next);
+  //     if (scrollRef.current) {
+  //       scrollRef.current.scrollTo({
+  //         x: next * (slideWidth + gap),
+  //         animated: true,
+  //       });
+  //     }
+  //   }, 3500);
+  //   return () => clearInterval(interval);
+  // }, [activeIndex, banners.length, slideWidth, gap]);
   return (
     <View style={styles.container}>
       <StatusBar style="light" />
@@ -112,17 +124,26 @@ export default function HomeScreen({ navigation }) {
             snapToInterval={slideWidth + gap}
             decelerationRate="fast"
           >
-            {images.map((uri, idx) => (
-              <View key={idx} style={{ width: slideWidth, marginRight: gap }}>
-                <Image
-                  source={{ uri }}
-                  style={[styles.slideImage, { width: slideWidth }]}
-                />
-              </View>
-            ))}
+            {loading ? (
+              <ActivityIndicator />
+            ) : (
+              banners.map((item) => (
+                <View
+                  key={Math.random()}
+                  style={{ width: slideWidth, marginRight: gap }}
+                >
+                  <Image
+                    source={{
+                      uri: `https://apioragreen.najeebmart.com/${item?.image?.path}`,
+                    }}
+                    style={[styles.slideImage, { width: slideWidth }]}
+                  />
+                </View>
+              ))
+            )}
           </ScrollView>
           <View style={styles.pagination}>
-            {images.map((_, idx) => (
+            {banners.map((_, idx) => (
               <View
                 key={idx}
                 style={[
@@ -141,7 +162,7 @@ export default function HomeScreen({ navigation }) {
           />
         ) : (
           <ProductCarousel
-            title="Products All"
+            title="Products"
             items={products.filter((data) => data?.sku?.price?.discount > 0)}
             products={products}
             onPressItem={(item) =>
