@@ -68,6 +68,7 @@ export default function App() {
     <Drawer.Navigator
       drawerContent={(props) => <CustomDrawerContent {...props} />}
       screenOptions={{
+      
         headerStyle: {
           backgroundColor: colors.primary,
         },
@@ -158,11 +159,29 @@ export default function App() {
         })}
       />
       <Drawer.Screen
-        name="VerifyOtpScreen"
-        getComponent={() => require("./src/screens/VerifyOTP").default}
+        name="SignUp"
+        getComponent={() => require("./src/screens/SignUpScreen").default}
         options={({ navigation }) => ({
           drawerItemStyle: { display: "none" },
-          title: "Verify OTP",
+          title: "Sign Up",
+          headerRight: () => (
+            <TouchableOpacity
+              onPress={() => navigation.goBack()}
+              style={{ marginRight: 15 }}
+            >
+              <MaterialIcons name="close" size={24} color={colors.white} />
+            </TouchableOpacity>
+          ),
+        })}
+      />
+      <Drawer.Screen
+        name="ForgotPassword"
+        getComponent={() =>
+          require("./src/screens/ForgotPasswordScreen").default
+        }
+        options={({ navigation }) => ({
+          drawerItemStyle: { display: "none" },
+          title: "Forgot Password",
           headerRight: () => (
             <TouchableOpacity
               onPress={() => navigation.goBack()}

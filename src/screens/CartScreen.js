@@ -30,10 +30,7 @@ export default function CartScreen({ navigation }) {
     const loadLoggedIN = async () => {
       try {
         const userString = await AsyncStorage.getItem("isLoggedIn");
-        if (userString) {
-          console.log(userString);
-          setIsLoggedIn(JSON.parse(userString) === "true" ? true : false);
-        }
+        setIsLoggedIn(userString === "true");
       } catch (error) {
         console.log("Error loading isloggedin:", error);
       }

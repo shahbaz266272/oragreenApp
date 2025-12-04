@@ -7,11 +7,16 @@ import {
   StyleSheet,
   Alert,
   ActivityIndicator,
+  ImageBackground,
+  Image,
 } from "react-native";
 import axios from "axios";
 import AsyncStorage from "@react-native-async-storage/async-storage"; // ✅ Import AsyncStorage
 import { setLoginInfo } from "../features/loginInfo/LoginInfo";
 import { useDispatch } from "react-redux";
+import authBackground from "../../assets/images/auth-background.png";
+import authLogo from "../../assets/images/auth-logo.png";
+import colors from "../theme/colors";
 
 export default function VerifyOtpScreen({ route, navigation }) {
   const { _id, deviceToken } = route.params;
@@ -66,52 +71,110 @@ export default function VerifyOtpScreen({ route, navigation }) {
   };
 
   return (
-    <View style={styles.container}>
-      <Text style={styles.title}>Verify OTP</Text>
-      <TextInput
-        placeholder="Enter OTP"
-        keyboardType="number-pad"
-        style={styles.input}
-        value={otp}
-        onChangeText={setOtp}
-      />
-      <TouchableOpacity
-        style={styles.button}
-        onPress={handleVerify}
-        disabled={loading}
-      >
-        {loading ? (
-          <ActivityIndicator color="#fff" />
-        ) : (
-          <Text style={styles.buttonText}>Verify OTP</Text>
-        )}
-      </TouchableOpacity>
-    </View>
+    <ImageBackground
+      source={authBackground}
+      style={styles.background}
+      resizeMode="cover"
+    >
+      <View style={styles.overlay}>
+        <View style={styles.container}>
+          <Image
+            source={authLogo}
+            style={styles.heroLogo}
+            resizeMode="contain"
+          />
+          <Text style={styles.title}>Verify OTP</Text>
+          <Text style={styles.subtitle}>
+            Enter the code we sent to your phone number.
+          </Text>
+          <TextInput
+            placeholder="Enter OTP"
+            keyboardType="number-pad"
+            style={styles.input}
+            value={otp}
+            onChangeText={setOtp}
+            maxLength={6}
+          />
+          <TouchableOpacity
+            style={styles.button}
+            onPress={handleVerify}
+            disabled={loading}
+          >
+            {loading ? (
+              <ActivityIndicator color="#fff" />
+            ) : (
+              <Text style={styles.buttonText}>Verify OTP</Text>
+            )}
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={styles.footerLink}
+            onPress={() => navigation.goBack()}
+          >
+            <Text style={styles.linkText}>Wrong number? Go back</Text>
+          </TouchableOpacity>
+        </View>
+      </View>
+    </ImageBackground>
   );
 }
 
 const styles = StyleSheet.create({
-  container: {
+  background: {
     flex: 1,
+  },
+  overlay: {
+    flex: 1,
+    paddingHorizontal: 20,
     justifyContent: "center",
+    alignItems: "center",
+  },
+  container: {
+    width: "100%",
     alignItems: "center",
     padding: 20,
   },
-  title: { fontSize: 24, marginBottom: 20 },
+  heroLogo: {
+    width: 140,
+    height: 80,
+    marginBottom: 10,
+  },
+  title: {
+    fontSize: 24,
+    marginBottom: 6,
+    fontWeight: "600",
+    color: colors.primary,
+  },
+  subtitle: {
+    fontSize: 14,
+    color: colors.primary,
+    marginBottom: 20,
+  },
   input: {
     width: "100%",
     borderWidth: 1,
-    borderColor: "#ccc",
+    borderColor: colors.gray,
+    backgroundColor: "rgba(255,255,255,0.9)",
     padding: 10,
     borderRadius: 8,
     marginBottom: 20,
+    textAlign: "center",
+    letterSpacing: 4,
+    fontSize: 18,
+    color: colors.primary,
   },
   button: {
-    backgroundColor: "#28a745",
+    backgroundColor: colors.blue,
     padding: 15,
     borderRadius: 8,
     width: "100%",
     alignItems: "center",
   },
   buttonText: { color: "#fff", fontSize: 16 },
+  footerLink: {
+    marginTop: 24,
+  },
+  linkText: {
+    color: colors.primary,
+    fontWeight: "600",
+  },
 });
