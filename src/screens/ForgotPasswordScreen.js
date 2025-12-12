@@ -9,6 +9,9 @@ import {
   ActivityIndicator,
   ImageBackground,
   Image,
+  ScrollView,
+  KeyboardAvoidingView,
+  Platform,
 } from "react-native";
 import authService from "../services/authService";
 import authBackground from "../../assets/images/auth-background.png";
@@ -78,7 +81,7 @@ export default function ForgotPasswordScreen({ navigation }) {
       await authService.resetPassword({
         email: email.trim().toLowerCase(),
         otp: otp.trim(),
-        password,
+        newPassword: password,
       });
 
       Alert.alert("Success", "Password updated successfully.", [
@@ -87,6 +90,7 @@ export default function ForgotPasswordScreen({ navigation }) {
           onPress: () => navigation.navigate("LoginScreen"),
         },
       ]);
+
       setStep(STEPS.email);
       setEmail("");
       setOtp("");
@@ -112,6 +116,7 @@ export default function ForgotPasswordScreen({ navigation }) {
               Enter the email associated with your account and we will send an
               OTP.
             </Text>
+
             <TextInput
               placeholder="Email"
               keyboardType="email-address"
@@ -120,6 +125,7 @@ export default function ForgotPasswordScreen({ navigation }) {
               value={email}
               onChangeText={setEmail}
             />
+
             <TouchableOpacity
               style={styles.button}
               onPress={handleEmailSubmit}
@@ -133,12 +139,14 @@ export default function ForgotPasswordScreen({ navigation }) {
             </TouchableOpacity>
           </>
         );
+
       case STEPS.otp:
         return (
           <>
             <Text style={styles.description}>
               Enter the OTP sent to {email}.
             </Text>
+
             <TextInput
               placeholder="OTP"
               keyboardType="number-pad"
@@ -146,6 +154,7 @@ export default function ForgotPasswordScreen({ navigation }) {
               value={otp}
               onChangeText={setOtp}
             />
+
             <TouchableOpacity
               style={styles.button}
               onPress={handleOtpSubmit}
@@ -157,6 +166,7 @@ export default function ForgotPasswordScreen({ navigation }) {
                 <Text style={styles.buttonText}>Verify OTP</Text>
               )}
             </TouchableOpacity>
+
             <TouchableOpacity
               style={styles.secondaryLink}
               onPress={handleEmailSubmit}
@@ -165,6 +175,7 @@ export default function ForgotPasswordScreen({ navigation }) {
             </TouchableOpacity>
           </>
         );
+
       case STEPS.reset:
       default:
         return (
@@ -172,6 +183,7 @@ export default function ForgotPasswordScreen({ navigation }) {
             <Text style={styles.description}>
               Create a new password for your account.
             </Text>
+
             <TextInput
               placeholder="New Password"
               secureTextEntry
@@ -179,6 +191,7 @@ export default function ForgotPasswordScreen({ navigation }) {
               value={password}
               onChangeText={setPassword}
             />
+
             <TextInput
               placeholder="Confirm Password"
               secureTextEntry
@@ -186,6 +199,7 @@ export default function ForgotPasswordScreen({ navigation }) {
               value={confirmPassword}
               onChangeText={setConfirmPassword}
             />
+
             <TouchableOpacity
               style={styles.button}
               onPress={handleResetPassword}
@@ -208,39 +222,46 @@ export default function ForgotPasswordScreen({ navigation }) {
       style={styles.background}
       resizeMode="cover"
     >
-      <View style={styles.overlay}>
-        <View style={styles.container}>
-          <Image
-            source={authLogo}
-            style={styles.heroLogo}
-            resizeMode="contain"
-          />
-
-          <Text style={styles.title}>Forgot Password</Text>
-          {renderContent()}
-        </View>
-      </View>
+      <KeyboardAvoidingView
+        style={{ flex: 1 }}
+        behavior={Platform.OS === "ios" ? "padding" : "height"}
+        keyboardVerticalOffset={Platform.OS === "ios" ? 80 : 0}
+      >
+        <ScrollView
+          contentContainerStyle={{ flexGrow: 1 }}
+          keyboardShouldPersistTaps="handled"
+          showsVerticalScrollIndicator={false}
+        >
+          <View style={styles.overlay}>
+            <View style={styles.container}>
+              <Image
+                source={authLogo}
+                style={styles.heroLogo}
+                resizeMode="contain"
+              />
+              <Text style={styles.title}>Forgot Password</Text>
+              {renderContent()}
+            </View>
+          </View>
+        </ScrollView>
+      </KeyboardAvoidingView>
     </ImageBackground>
   );
 }
 
 const styles = StyleSheet.create({
-  background: {
-    flex: 1,
-  },
+  background: { flex: 1 },
   overlay: {
     flex: 1,
-    // backgroundColor: "rgba(0,0,0,0.4)",
     justifyContent: "center",
     alignItems: "center",
     paddingHorizontal: 20,
   },
   container: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-    padding: 20,
     width: "100%",
+    padding: 20,
+    alignItems: "center",
+    justifyContent: "center",
   },
   heroLogo: {
     width: 140,
@@ -276,9 +297,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   buttonText: { color: "#fff", fontSize: 16 },
-  secondaryLink: {
-    marginTop: 16,
-  },
+  secondaryLink: { marginTop: 16 },
   resendText: {
     color: "#cce2ff",
     fontWeight: "600",

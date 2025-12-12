@@ -9,6 +9,9 @@ import {
   ActivityIndicator,
   ImageBackground,
   Image,
+  ScrollView,
+  KeyboardAvoidingView,
+  Platform,
 } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useDispatch } from "react-redux";
@@ -77,88 +80,101 @@ export default function LoginScreen({ navigation }) {
       style={styles.background}
       resizeMode="cover"
     >
-      <View style={styles.overlay}>
-        <View style={styles.container}>
-          <Image
-            source={authLogo}
-            style={styles.heroLogo}
-            resizeMode="contain"
-          />
+      <KeyboardAvoidingView
+        style={{ flex: 1 }}
+        behavior={Platform.OS === "ios" ? "padding" : "height"}
+        keyboardVerticalOffset={Platform.OS === "ios" ? 80 : 0}
+      >
+        <ScrollView
+          contentContainerStyle={{ flexGrow: 1 }}
+          keyboardShouldPersistTaps="handled"
+          showsVerticalScrollIndicator={false}
+        >
+          <View style={styles.overlay}>
+            <View style={styles.container}>
+              <Image
+                source={authLogo}
+                style={styles.heroLogo}
+                resizeMode="contain"
+              />
 
-          <Text style={styles.title}>Welcome Back</Text>
-          <TextInput
-            placeholder="Email"
-            keyboardType="email-address"
-            autoCapitalize="none"
-            style={styles.input}
-            value={email}
-            onChangeText={setEmail}
-          />
-          <View style={styles.passwordWrapper}>
-            <TextInput
-              placeholder="Password"
-              secureTextEntry={!showPassword}
-              style={[styles.input, styles.passwordInput]}
-              value={password}
-              onChangeText={setPassword}
-            />
-            <TouchableOpacity
-              style={styles.toggleVisibility}
-              onPress={() => setShowPassword((prev) => !prev)}
-            >
-              <Text style={styles.toggleText}>
-                {showPassword ? "Hide" : "Show"}
-              </Text>
-            </TouchableOpacity>
+              <Text style={styles.title}>Welcome Back</Text>
+
+              <TextInput
+                placeholder="Email"
+                keyboardType="email-address"
+                autoCapitalize="none"
+                style={styles.input}
+                value={email}
+                onChangeText={setEmail}
+              />
+
+              <View style={styles.passwordWrapper}>
+                <TextInput
+                  placeholder="Password"
+                  secureTextEntry={!showPassword}
+                  style={[styles.input, styles.passwordInput]}
+                  value={password}
+                  onChangeText={setPassword}
+                />
+                <TouchableOpacity
+                  style={styles.toggleVisibility}
+                  onPress={() => setShowPassword((prev) => !prev)}
+                >
+                  <Text style={styles.toggleText}>
+                    {showPassword ? "Hide" : "Show"}
+                  </Text>
+                </TouchableOpacity>
+              </View>
+
+              <TouchableOpacity
+                onPress={() => navigation.navigate("ForgotPassword")}
+                style={styles.linkWrapper}
+              >
+                <Text style={styles.linkText}>Forgot password?</Text>
+              </TouchableOpacity>
+
+              <TouchableOpacity
+                style={styles.button}
+                onPress={handleLogin}
+                disabled={loading}
+              >
+                {loading ? (
+                  <ActivityIndicator color="#fff" />
+                ) : (
+                  <Text style={styles.buttonText}>Login</Text>
+                )}
+              </TouchableOpacity>
+
+              <View style={styles.footerTextWrapper}>
+                <Text style={styles.footerText}>New here? </Text>
+                <TouchableOpacity onPress={() => navigation.navigate("SignUp")}>
+                  <Text style={[styles.footerText, styles.linkText]}>
+                    Create an account
+                  </Text>
+                </TouchableOpacity>
+              </View>
+            </View>
           </View>
-          <TouchableOpacity
-            onPress={() => navigation.navigate("ForgotPassword")}
-            style={styles.linkWrapper}
-          >
-            <Text style={styles.linkText}>Forgot password?</Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            style={styles.button}
-            onPress={handleLogin}
-            disabled={loading}
-          >
-            {loading ? (
-              <ActivityIndicator color="#fff" />
-            ) : (
-              <Text style={styles.buttonText}>Login</Text>
-            )}
-          </TouchableOpacity>
-          <View style={styles.footerTextWrapper}>
-            <Text style={styles.footerText}>New here? </Text>
-            <TouchableOpacity onPress={() => navigation.navigate("SignUp")}>
-              <Text style={[styles.footerText, styles.linkText]}>
-                Create an account
-              </Text>
-            </TouchableOpacity>
-          </View>
-        </View>
-      </View>
+        </ScrollView>
+      </KeyboardAvoidingView>
     </ImageBackground>
   );
 }
 
 const styles = StyleSheet.create({
-  background: {
-    flex: 1,
-  },
+  background: { flex: 1 },
   overlay: {
     flex: 1,
-    // backgroundColor: "rgba(0,0,0,0.4)",
     justifyContent: "center",
     alignItems: "center",
     paddingHorizontal: 20,
   },
   container: {
-    flex: 1,
+    width: "100%",
     justifyContent: "center",
     alignItems: "center",
     padding: 20,
-    width: "100%",
   },
   heroLogo: {
     width: 140,
@@ -206,7 +222,7 @@ const styles = StyleSheet.create({
     fontWeight: "600",
   },
   button: {
-    backgroundColor:colors.blue,
+    backgroundColor: colors.blue,
     padding: 15,
     borderRadius: 8,
     width: "100%",

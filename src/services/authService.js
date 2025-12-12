@@ -13,13 +13,28 @@ const client = axios.create({
 });
 
 const authService = {
+  // -------------------------
+  // LOGIN (Email Login API)
+  // -------------------------
   loginWithEmail: async (email, password) =>
-    client.post("/login", { email, password }),
-  signUp: async (payload) => client.post("/register", payload),
+    client.post("/email-login", { email, password }),
+
+  // -------------------------
+  // SIGNUP (Email Signup API)
+  // -------------------------
+  signUp: async (payload) => client.post("/email-signup", payload),
+
+  // -------------------------
+  // FORGOT PASSWORD API
+  // -------------------------
   sendForgotPasswordOtp: async (email) =>
     client.post("/forgot-password", { email }),
-  resetPassword: async ({ email, otp, password }) =>
-    client.post("/reset-password", { email, otp, password }),
+
+  // -------------------------
+  // RESET PASSWORD API
+  // -------------------------
+  resetPassword: async ({ email, otp, newPassword }) =>
+    client.post("/reset-password", { email, otp, newPassword }),
 };
 
 export default authService;

@@ -52,7 +52,6 @@ export default function App() {
     }
     loadApp();
   }, []);
-  console.log(isLoggedIn, "--");
   const onLayoutRootView = useCallback(async () => {
     if (appIsReady) {
       // This tells the splash screen to hide immediately after the root view
@@ -68,7 +67,6 @@ export default function App() {
     <Drawer.Navigator
       drawerContent={(props) => <CustomDrawerContent {...props} />}
       screenOptions={{
-      
         headerStyle: {
           backgroundColor: colors.primary,
         },

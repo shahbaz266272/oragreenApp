@@ -10,7 +10,10 @@ import {
   ScrollView,
   ImageBackground,
   Image,
+  KeyboardAvoidingView,
+  Platform,
 } from "react-native";
+
 import authService from "../services/authService";
 import authBackground from "../../assets/images/auth-background.png";
 import authLogo from "../../assets/images/auth-logo.png";
@@ -35,12 +38,13 @@ export default function SignUpScreen({ navigation }) {
     }
 
     setLoading(true);
+
     try {
       await authService.signUp({
-        firstName: firstName.trim(),
+        name: firstName.trim(),
         email: email.trim().toLowerCase(),
         password,
-        mobile: phoneNumber.trim(),
+        phone: phoneNumber.trim(),
       });
 
       Alert.alert("Account created", "You can now log in.", [
@@ -54,6 +58,7 @@ export default function SignUpScreen({ navigation }) {
         error?.response?.data?.message ||
         error?.message ||
         "Unable to sign up. Please try again.";
+
       Alert.alert("Sign up failed", message);
     } finally {
       setLoading(false);
@@ -66,65 +71,80 @@ export default function SignUpScreen({ navigation }) {
       style={styles.background}
       resizeMode="cover"
     >
-      <View style={styles.overlay}>
-        <ScrollView contentContainerStyle={styles.container}>
-          <Image
-            source={authLogo}
-            style={styles.heroLogo}
-            resizeMode="contain"
-          />
-          <Text style={styles.title}>Create Account</Text>
-          <TextInput
-            placeholder="First Name"
-            style={styles.input}
-            value={firstName}
-            onChangeText={setFirstName}
-          />
-          <TextInput
-            placeholder="Email"
-            keyboardType="email-address"
-            autoCapitalize="none"
-            style={styles.input}
-            value={email}
-            onChangeText={setEmail}
-          />
-          <TextInput
-            placeholder="Password"
-            secureTextEntry
-            style={styles.input}
-            value={password}
-            onChangeText={setPassword}
-          />
-          <TextInput
-            placeholder="Phone Number"
-            keyboardType="phone-pad"
-            style={styles.input}
-            value={phoneNumber}
-            onChangeText={setPhoneNumber}
-          />
-
-          <TouchableOpacity
-            style={styles.button}
-            onPress={handleSignUp}
-            disabled={loading}
+      <KeyboardAvoidingView
+        style={{ flex: 1 }}
+        behavior={Platform.OS === "ios" ? "padding" : "height"}
+        keyboardVerticalOffset={Platform.OS === "ios" ? 80 : 0}
+      >
+        <View style={styles.overlay}>
+          <ScrollView
+            contentContainerStyle={styles.container}
+            keyboardShouldPersistTaps="handled"
+            showsVerticalScrollIndicator={false}
           >
-            {loading ? (
-              <ActivityIndicator color="#fff" />
-            ) : (
-              <Text style={styles.buttonText}>Sign Up</Text>
-            )}
-          </TouchableOpacity>
+            <Image
+              source={authLogo}
+              style={styles.heroLogo}
+              resizeMode="contain"
+            />
 
-          <View style={styles.footerTextWrapper}>
-            <Text style={styles.footerText}>Already have an account? </Text>
+            <Text style={styles.title}>Create Account</Text>
+
+            <TextInput
+              placeholder=" Name"
+              style={styles.input}
+              value={firstName}
+              onChangeText={setFirstName}
+            />
+
+            <TextInput
+              placeholder="Email"
+              keyboardType="email-address"
+              autoCapitalize="none"
+              style={styles.input}
+              value={email}
+              onChangeText={setEmail}
+            />
+
+            <TextInput
+              placeholder="Password"
+              secureTextEntry
+              style={styles.input}
+              value={password}
+              onChangeText={setPassword}
+            />
+
+            <TextInput
+              placeholder="Phone Number"
+              keyboardType="phone-pad"
+              style={styles.input}
+              value={phoneNumber}
+              onChangeText={setPhoneNumber}
+            />
+
             <TouchableOpacity
-              onPress={() => navigation.navigate("LoginScreen")}
+              style={styles.button}
+              onPress={handleSignUp}
+              disabled={loading}
             >
-              <Text style={[styles.footerText, styles.linkText]}>Login</Text>
+              {loading ? (
+                <ActivityIndicator color="#fff" />
+              ) : (
+                <Text style={styles.buttonText}>Sign Up</Text>
+              )}
             </TouchableOpacity>
-          </View>
-        </ScrollView>
-      </View>
+
+            <View style={styles.footerTextWrapper}>
+              <Text style={styles.footerText}>Already have an account? </Text>
+              <TouchableOpacity
+                onPress={() => navigation.navigate("LoginScreen")}
+              >
+                <Text style={[styles.footerText, styles.linkText]}>Login</Text>
+              </TouchableOpacity>
+            </View>
+          </ScrollView>
+        </View>
+      </KeyboardAvoidingView>
     </ImageBackground>
   );
 }

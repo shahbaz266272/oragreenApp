@@ -6,6 +6,7 @@ import {
   StyleSheet,
   Image,
   ActivityIndicator,
+  RefreshControl,
 } from "react-native";
 import colors from "../theme/colors";
 import orderService from "../services/orderService";
@@ -13,10 +14,16 @@ import { getImageUrl } from "../services/utils";
 
 export default function OrdersScreen() {
   const [orders, setOrders] = useState([]);
-  const [loading, setLoading] = useState(false); // ✅ Loader state
+  const [loading, setLoading] = useState(false); // Initial loader
+  const [refreshing, setRefreshing] = useState(false); // Pull-to-refresh
 
-  const getOrders = () => {
-    setLoading(true); // start loader
+  const getOrders = (isRefresh = false) => {
+    if (isRefresh) {
+      setRefreshing(true);
+    } else {
+      setLoading(true);
+    }
+
     orderService
       .getUserOrders()
       .then((orders) => {
@@ -25,7 +32,10 @@ export default function OrdersScreen() {
       .catch((err) => {
         console.error(err);
       })
-      .finally(() => setLoading(false)); // stop loader
+      .finally(() => {
+        setLoading(false);
+        setRefreshing(false);
+      });
   };
 
   useEffect(() => {
@@ -83,8 +93,7 @@ export default function OrdersScreen() {
     <View style={styles.container}>
       <Text style={styles.title}>My Orders</Text>
 
-      {loading ? (
-        // ✅ Show loader while fetching
+      {loading && !refreshing ? (
         <View style={styles.loaderContainer}>
           <ActivityIndicator size="large" color={colors.primary} />
         </View>
@@ -94,6 +103,14 @@ export default function OrdersScreen() {
           keyExtractor={(item) => item._id.toString()}
           renderItem={renderItem}
           contentContainerStyle={{ paddingBottom: 20 }}
+          refreshControl={
+            <RefreshControl
+              refreshing={refreshing}
+              onRefresh={() => getOrders(true)}
+              colors={[colors.primary]} // Android
+              tintColor={colors.primary} // iOS
+            />
+          }
         />
       )}
     </View>

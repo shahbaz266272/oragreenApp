@@ -137,6 +137,14 @@ export default function AddAddressScreen({ navigation }) {
         />
 
         {/* Address Info */}
+        <Text style={styles.label}>Complete Address</Text>
+        <TextInput
+          style={styles.input}
+          value={content}
+          onChangeText={setContent}
+          multiline
+        />
+
         <Text style={styles.label}>Line*</Text>
         <TextInput style={styles.input} value={line} onChangeText={setLine} />
 
@@ -172,14 +180,6 @@ export default function AddAddressScreen({ navigation }) {
           style={styles.input}
           value={gender}
           onChangeText={setGender}
-        />
-
-        <Text style={styles.label}>Content</Text>
-        <TextInput
-          style={styles.input}
-          value={content}
-          onChangeText={setContent}
-          multiline
         />
 
         {/* Default Toggle */}

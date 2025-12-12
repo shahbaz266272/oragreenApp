@@ -110,9 +110,9 @@ export default function CustomDrawerContent(props) {
         </View>
 
         <View style={styles.drawerSection}>
-          <Text style={styles.sectionTitle}>More</Text>
+          {/* <Text style={styles.sectionTitle}>More</Text> */}
 
-          <DrawerItem
+          {/* <DrawerItem
             label="Rate Us"
             icon={({ color, size }) => (
               <MaterialIcons name="star-border" size={size} color={color} />
@@ -143,7 +143,7 @@ export default function CustomDrawerContent(props) {
               console.log("Privacy Policy pressed");
             }}
             labelStyle={styles.drawerLabel}
-          />
+          /> */}
         </View>
       </DrawerContentScrollView>
 
@@ -174,7 +174,7 @@ export default function CustomDrawerContent(props) {
             </View>
           </TouchableOpacity>
         )}
-        <Text style={styles.versionText}>Version 1.0.0</Text>
+        {/* <Text style={styles.versionText}>Version 1.0.0</Text> */}
       </View>
     </View>
   );

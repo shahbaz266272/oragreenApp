@@ -113,7 +113,7 @@ export default function CartScreen({ navigation }) {
             loginItems?.isLoggedIN
               ? cartItems?.length > 0
                 ? navigation.navigate("Checkout")
-                : navigation.navigate("Main")
+                : navigation.navigate("Home")
               : navigation.navigate("LoginScreen")
           }
         >
