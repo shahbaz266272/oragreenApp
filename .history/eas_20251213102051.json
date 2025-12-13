@@ -16,12 +16,6 @@
     }
   },
   "submit": {
-    "production": {
-      "ios": {
-        "appleId": "expresstechdigital@gmail.com",
-        "ascAppId": "6756510393",
-        "appleTeamId": "7SQ8H9PA45"
-      }
-    }
+    "production": {}
   }
 }

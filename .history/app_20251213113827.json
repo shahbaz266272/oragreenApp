@@ -2,11 +2,11 @@
   "expo": {
     "name": "Oragreen",
     "slug": "oragreen",
-    "version": "1.0.1",
+    "version": "1.0.0",
     "orientation": "portrait",
     "userInterfaceStyle": "light",
 
-    "icon": "./assets/splash.png",
+    "icon": "./assets/icon.png",
 
     "splash": {
       "image": "./assets/splash.png",
@@ -26,7 +26,7 @@
 
     "android": {
       "adaptiveIcon": {
-        "foregroundImage": "./assets/splash.png",
+        "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
       },
       "package": "com.oragreen.app"
