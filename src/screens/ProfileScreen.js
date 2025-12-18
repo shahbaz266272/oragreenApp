@@ -16,11 +16,13 @@ import {
   ActivityIndicator,
 } from "react-native";
 import { useNavigation } from "@react-navigation/native";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { Alert } from "react-native";
+import { setLoginInfo } from "../features/loginInfo/LoginInfo";
 
 export default function ProfileScreen() {
   const loginItems = useSelector((state) => state.loginInfo?.item);
-
+  const dispatch = useDispatch();
   const [name, setName] = useState("John Doe");
   const [email, setEmail] = useState("john.doe@example.com");
   const [notifications, setNotifications] = useState(true);
@@ -66,8 +68,6 @@ export default function ProfileScreen() {
     setLoading(true);
 
     try {
-      const token = await AsyncStorage.getItem("jwt"); // Store token when login
-
       const response = await axios.put(
         `https://apioragreen.najeebmart.com/api/v1/app/user/${user._id}`,
         {
@@ -98,6 +98,69 @@ export default function ProfileScreen() {
     }
 
     setLoading(false);
+  };
+  const [deleteLoading, setDeleteLoading] = useState(false);
+
+  // Inside your ProfileScreen component
+  const deleteAccount = async () => {
+    if (!user?.email) return;
+
+    // Confirm before deletion
+    Alert.alert(
+      "Delete Account",
+      "Are you sure you want to delete your account? This action cannot be undone.",
+      [
+        { text: "Cancel", style: "cancel" },
+        {
+          text: "Delete",
+          style: "destructive",
+          onPress: async () => {
+            try {
+              setDeleteLoading(true);
+              const response = await axios.delete(
+                `https://apioragreen.najeebmart.com/api/v1/app/user/delete-by-email`,
+                {
+                  data: { email: user.email },
+                  headers: {
+                    "x-api-key":
+                      "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0eXBlIjoiYXBwIiwidGl0bGUiOiJ0b2tlbiBmb3IgYXBpIGtleSIsImlhdCI6MTYzNjQ0ODczOH0.zmvB5qcMd5k_-A2igZjpZppjc-C_PYVb2Saapo38Gi4",
+                    Authorization: `Bearer ${loginItems?.jwt}`,
+                  },
+                }
+              );
+
+              console.log("Account deleted:", response.data);
+
+              // Clear AsyncStorage and navigate to login
+              try {
+                await AsyncStorage.removeItem("jwt");
+                await AsyncStorage.removeItem("user");
+                await AsyncStorage.removeItem("isLoggedIn");
+                dispatch(setLoginInfo(null));
+
+                navigation.reset({
+                  index: 0,
+                  routes: [{ name: "LoginScreen" }],
+                });
+              } catch (error) {
+                console.log("Logout Error:", error);
+              }
+            } catch (error) {
+              console.log(
+                "Error deleting account:",
+                error.response?.data || error
+              );
+              Alert.alert(
+                "Error",
+                "Failed to delete account. Please try again."
+              );
+            } finally {
+              setDeleteLoading(false);
+            }
+          },
+        },
+      ]
+    );
   };
 
   return (
@@ -148,6 +211,18 @@ export default function ProfileScreen() {
           onPress={() => navigation.navigate("Home")}
         >
           <Text style={styles.saveButtonText}>Save Changes</Text>
+        </TouchableOpacity>
+
+        <TouchableOpacity
+          style={[styles.saveButton, { backgroundColor: "red", marginTop: 20 }]}
+          onPress={deleteAccount}
+          disabled={deleteLoading}
+        >
+          {deleteLoading ? (
+            <ActivityIndicator color="#fff" />
+          ) : (
+            <Text style={styles.saveButtonText}>Delete Account</Text>
+          )}
         </TouchableOpacity>
       </ScrollView>
       <Modal visible={editVisible} transparent animationType="slide">
