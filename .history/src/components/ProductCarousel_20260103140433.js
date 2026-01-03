@@ -95,21 +95,55 @@ export default function ProductCarousel({
                     onPress={() => onPressItem && onPressItem(item)}
                     activeOpacity={0.85}
                   >
-                    {item?.sku?.price?.discount > 0 ? (
-                      <View style={styles.badge}>
-                        <Text style={styles.badgeText}>
-                          {item?.sku?.price?.base > 0
-                            ? `-${(
-                                (1 -
-                                  item?.sku?.price?.sale /
-                                    item?.sku?.price?.base) *
-                                100
-                              ).toFixed(1)}%`
-                            : "0%"}
-                        </Text>
-                      </View>
-                    ) : null}
-
+                    {item?.sku?.price?.base > 0
+                      ? `-${(
+                          (1 -
+                            item?.sku?.price?.sale / item?.sku?.price?.base) *
+                          100
+                        ).toFixed(1)}%`
+                      : "0%"}
+                    {item?.sku?.price?.base > 0
+                      ? `-${(
+                          (1 -
+                            item?.sku?.price?.sale / item?.sku?.price?.base) *
+                          100
+                        ).toFixed(1)}%`
+                      : "0%"}
+                    {item?.sku?.price?.base > 0
+                      ? `-${(
+                          (1 -
+                            item?.sku?.price?.sale / item?.sku?.price?.base) *
+                          100
+                        ).toFixed(1)}%`
+                      : "0%"}
+                    {item?.sku?.price?.base > 0
+                      ? `-${(
+                          (1 -
+                            item?.sku?.price?.sale / item?.sku?.price?.base) *
+                          100
+                        ).toFixed(1)}%`
+                      : "0%"}
+                    {item?.sku?.price?.base > 0
+                      ? `-${(
+                          (1 -
+                            item?.sku?.price?.sale / item?.sku?.price?.base) *
+                          100
+                        ).toFixed(1)}%`
+                      : "0%"}
+                    {item?.sku?.price?.base > 0
+                      ? `-${(
+                          (1 -
+                            item?.sku?.price?.sale / item?.sku?.price?.base) *
+                          100
+                        ).toFixed(1)}%`
+                      : "0%"}
+                    {item?.sku?.price?.base > 0
+                      ? `-${(
+                          (1 -
+                            item?.sku?.price?.sale / item?.sku?.price?.base) *
+                          100
+                        ).toFixed(1)}%`
+                      : "0%"}
                     <Image
                       source={{ uri: getImageUrl(item?.image?.path) }}
                       style={[styles.image, { height: imageHeight }]}

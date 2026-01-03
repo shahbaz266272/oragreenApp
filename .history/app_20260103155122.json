@@ -6,10 +6,10 @@
     "orientation": "portrait",
     "userInterfaceStyle": "light",
 
-    "icon": "./assets/splashfinal.png",
+    "icon": "./assets/splash.png",
 
     "splash": {
-      "image": "./assets/splashfinal.png",
+      "image": "./assets/splash.png",
       "resizeMode": "cover",
       "backgroundColor": "#fff",
       "imageWidth": 200

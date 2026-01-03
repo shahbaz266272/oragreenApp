@@ -98,18 +98,10 @@ export default function ProductCarousel({
                     {item?.sku?.price?.discount > 0 ? (
                       <View style={styles.badge}>
                         <Text style={styles.badgeText}>
-                          {item?.sku?.price?.base > 0
-                            ? `-${(
-                                (1 -
-                                  item?.sku?.price?.sale /
-                                    item?.sku?.price?.base) *
-                                100
-                              ).toFixed(1)}%`
-                            : "0%"}
+                          -{item?.sku?.price?.discount}.0%
                         </Text>
                       </View>
                     ) : null}
-
                     <Image
                       source={{ uri: getImageUrl(item?.image?.path) }}
                       style={[styles.image, { height: imageHeight }]}

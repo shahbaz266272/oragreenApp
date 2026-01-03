@@ -162,12 +162,7 @@ export default function HomeScreen({ navigation }) {
           />
         ) : (
           <ProductCarousel
-            title={
-              products.filter((data) => data?.sku?.price?.discount > 0)
-                ?.length > 0
-                ? "Discounts"
-                : "Products"
-            }
+            title="Products"
             items={products.filter((data) => data?.sku?.price?.discount > 0)}
             products={products}
             onPressItem={(item) =>
@@ -263,8 +258,6 @@ const styles = StyleSheet.create({
     height: 200,
     borderRadius: 10,
     backgroundColor: "#ddd",
-    objectFit: "fill",
-    width: "100%",
   },
   slideOverlay: {
     position: "absolute",

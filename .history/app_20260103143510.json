@@ -6,13 +6,12 @@
     "orientation": "portrait",
     "userInterfaceStyle": "light",
 
-    "icon": "./assets/splashfinal.png",
+    "icon": "./assets/splash.png",
 
     "splash": {
-      "image": "./assets/splashfinal.png",
-      "resizeMode": "cover",
-      "backgroundColor": "#fff",
-      "imageWidth": 200
+      "image": "./assets/splash.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#fff"
     },
 
     "assetBundlePatterns": ["**/*"],
@@ -27,7 +26,7 @@
 
     "android": {
       "adaptiveIcon": {
-        "foregroundImage": "./assets/androidfinal.png",
+        "foregroundImage": "./assets/splash.png",
         "backgroundColor": "#ffffff"
       },
       "package": "com.oragreen.app"

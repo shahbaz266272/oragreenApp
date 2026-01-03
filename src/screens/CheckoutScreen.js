@@ -28,8 +28,8 @@ export default function CheckoutScreen({ navigation }) {
     0
   );
 
-  const deliveryFee = 200;
-  const total = subtotal + deliveryFee;
+  const deliveryFee = "Free";
+  const total = subtotal + (deliveryFee === "Free" ? 0 : deliveryFee);
 
   /** ------------ UI ------------ */
   const createOrderBody = () => {
@@ -203,7 +203,7 @@ export default function CheckoutScreen({ navigation }) {
 
         <View style={styles.row}>
           <Text>Delivery Fee</Text>
-          <Text>Rs {deliveryFee}</Text>
+          <Text>{deliveryFee}</Text>
         </View>
 
         <View style={styles.divider} />

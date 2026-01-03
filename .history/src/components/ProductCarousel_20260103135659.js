@@ -29,7 +29,7 @@ export default function ProductCarousel({
     typeof containerHeight !== "undefined" ? containerHeight : carouselHeight;
   const imageHeight = Math.round(effectiveCarouselHeight * 0.44);
   const effectiveGridTitle = gridTitle || "Products";
-  const gridItems =
+  const sortedGridItems =
     Array.isArray(products) && products.length > 0 ? products : [];
   const handleAdd = (item) => {
     dispatch(addToCart(item));
@@ -37,11 +37,11 @@ export default function ProductCarousel({
   // Define the desired order
   const productOrder = [
     "19 Liter Water Bottle",
-    "19 ltr Empty Bottle Security",
+    "19 ltr Empty",
+    "Pack of 12 500 ml Premium",
+    "Pack of 6 1.5 ltr  Premium",
     "12 ltr Water Bottle",
     "6 liter water bottle",
-    "Pack of 6 1.5 ltr  Premium",
-    "Pack of 12 500 ml Premium",
     "Pack Of 6 1.5 ltr water bottle",
     "Pack of 12 500ml water bottles",
   ];
@@ -62,7 +62,7 @@ export default function ProductCarousel({
     });
   };
   const sortedItems = sortByTitleOrder(items);
-  const sortedGridItems = sortByTitleOrder(gridItems);
+  const sortedsortedGridItems = sortByTitleOrder(sortedGridItems);
 
   return (
     <View style={styles.container}>
@@ -98,18 +98,10 @@ export default function ProductCarousel({
                     {item?.sku?.price?.discount > 0 ? (
                       <View style={styles.badge}>
                         <Text style={styles.badgeText}>
-                          {item?.sku?.price?.base > 0
-                            ? `-${(
-                                (1 -
-                                  item?.sku?.price?.sale /
-                                    item?.sku?.price?.base) *
-                                100
-                              ).toFixed(1)}%`
-                            : "0%"}
+                          -{item?.sku?.price?.discount}.0%
                         </Text>
                       </View>
                     ) : null}
-
                     <Image
                       source={{ uri: getImageUrl(item?.image?.path) }}
                       style={[styles.image, { height: imageHeight }]}

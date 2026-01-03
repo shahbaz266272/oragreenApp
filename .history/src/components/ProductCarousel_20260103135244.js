@@ -34,39 +34,11 @@ export default function ProductCarousel({
   const handleAdd = (item) => {
     dispatch(addToCart(item));
   };
-  // Define the desired order
-  const productOrder = [
-    "19 Liter Water Bottle",
-    "19 ltr Empty Bottle Security",
-    "12 ltr Water Bottle",
-    "6 liter water bottle",
-    "Pack of 6 1.5 ltr  Premium",
-    "Pack of 12 500 ml Premium",
-    "Pack Of 6 1.5 ltr water bottle",
-    "Pack of 12 500ml water bottles",
-  ];
-
-  // Function to sort by title based on the above order
-  const sortByTitleOrder = (products) => {
-    return products.slice().sort((a, b) => {
-      const indexA = productOrder.findIndex(
-        (title) => title.toLowerCase() === (a.title || "").toLowerCase()
-      );
-      const indexB = productOrder.findIndex(
-        (title) => title.toLowerCase() === (b.title || "").toLowerCase()
-      );
-      // If title not in order list, push it to the end
-      const finalIndexA = indexA === -1 ? Number.MAX_SAFE_INTEGER : indexA;
-      const finalIndexB = indexB === -1 ? Number.MAX_SAFE_INTEGER : indexB;
-      return finalIndexA - finalIndexB;
-    });
-  };
-  const sortedItems = sortByTitleOrder(items);
-  const sortedGridItems = sortByTitleOrder(gridItems);
+  console.log(gridItems[1]?.title, "--items");
 
   return (
     <View style={styles.container}>
-      {sortedItems?.length > 0 && (
+      {items?.length > 0 && (
         <View style={styles.header}>
           <Text style={styles.headerTitle}>{title}</Text>
           {/* <TouchableOpacity style={styles.seeMoreButton} onPress={() => {}}>
@@ -75,7 +47,7 @@ export default function ProductCarousel({
         </View>
       )}
 
-      {sortedItems?.length > 0 && (
+      {items?.length > 0 && (
         <View
           style={[styles.carouselWrapper, { height: effectiveCarouselHeight }]}
         >
@@ -84,8 +56,8 @@ export default function ProductCarousel({
             showsHorizontalScrollIndicator={false}
             contentContainerStyle={styles.scrollContent}
           >
-            {sortedItems?.length > 0 ? (
-              sortedItems?.map((item, index) => (
+            {items?.length > 0 ? (
+              items?.map((item, index) => (
                 <View
                   key={item?.id ?? item?._id ?? `item-${index}`}
                   style={[styles.card, { width: 190 }]}
@@ -98,18 +70,10 @@ export default function ProductCarousel({
                     {item?.sku?.price?.discount > 0 ? (
                       <View style={styles.badge}>
                         <Text style={styles.badgeText}>
-                          {item?.sku?.price?.base > 0
-                            ? `-${(
-                                (1 -
-                                  item?.sku?.price?.sale /
-                                    item?.sku?.price?.base) *
-                                100
-                              ).toFixed(1)}%`
-                            : "0%"}
+                          -{item?.sku?.price?.discount}.0%
                         </Text>
                       </View>
                     ) : null}
-
                     <Image
                       source={{ uri: getImageUrl(item?.image?.path) }}
                       style={[styles.image, { height: imageHeight }]}
@@ -159,7 +123,7 @@ export default function ProductCarousel({
             </TouchableOpacity> */}
           </View>
           <View style={styles.gridContainer}>
-            {sortedGridItems.map((item, index) => (
+            {gridItems.map((item, index) => (
               <View
                 key={`grid-${item?.id ?? item?._id ?? index}`}
                 style={[

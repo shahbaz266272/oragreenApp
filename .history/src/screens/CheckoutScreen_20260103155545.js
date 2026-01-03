@@ -6,28 +6,117 @@ import {
   TouchableOpacity,
   Image,
   ScrollView,
+  ActivityIndicator,
 } from "react-native";
 import colors from "../theme/colors";
 import { useSelector, useDispatch } from "react-redux";
 import { increaseQty, decreaseQty } from "../features/cart/cartSlice";
 import { getImageUrl } from "../services/utils";
+import axios from "axios";
+import { useState } from "react";
 
 export default function CheckoutScreen({ navigation }) {
   const dispatch = useDispatch();
-
+  const loginItems = useSelector((state) => state.loginInfo?.item);
+  console.log(loginItems, "00");
   const cartItems = useSelector((state) => state.cart.items);
-  const selectedAddress = useSelector((state) => state.selectedAddress.item);
-
+  const selectedAddress = useSelector((state) => state.selectedAddress?.item);
+  const [loading, setLoading] = useState(false);
   /** ------------ PRICE CALCULATIONS ------------ */
   const subtotal = cartItems.reduce(
     (sum, item) => sum + item.sku.price.sale * item.quantity,
     0
   );
 
-  const deliveryFee = 200;
-  const total = subtotal + deliveryFee;
+  const deliveryFee = "Free";
+  const total = subtotal + (deliveryFee === "Free" ? 0 : deliveryFee);
 
   /** ------------ UI ------------ */
+  const createOrderBody = () => {
+    if (!selectedAddress || cartItems.length === 0) return null;
+
+    const subTotal = cartItems.reduce(
+      (sum, item) => sum + item.sku.price.sale * item.quantity,
+      0
+    );
+
+    const shipping = 200;
+    const grandTotal = subTotal + shipping;
+
+    return {
+      status: "new",
+      subTotal: subTotal,
+      tax: 0,
+      flatDiscount: 0,
+      userId: loginItems?.user?._id,
+      shippingInfo: {
+        firstName: selectedAddress.firstName,
+        lastName: selectedAddress.lastName,
+        mobile: selectedAddress.mobile,
+        line: selectedAddress.line,
+        city: selectedAddress.city,
+        country: selectedAddress.country,
+        type: selectedAddress.type,
+        gender: selectedAddress.gender,
+        apartment: selectedAddress.apartment,
+        subTotal,
+        grandTotal,
+        location: {
+          type: "Point",
+          coordinates: [33.6951, 72.9724],
+        },
+        userId: loginItems?.user?._id,
+      },
+      items: cartItems.map((item) => ({
+        productId: item._id,
+        categoryId: item.categoryId,
+        subCategoryId: item.subCategoryId,
+        productCategoryId: item.productCategoryId,
+        brandId: item.brandId,
+        quantity: item.quantity,
+        price: {
+          base: item.sku.price.base,
+          discount: item.sku.price.discount,
+          sale: item.sku.price.sale,
+        },
+      })),
+      shipping,
+      grandTotal,
+    };
+  };
+  const placeOrder = async () => {
+    const body = createOrderBody();
+    if (!body) {
+      alert("Missing address or cart items!");
+      return;
+    }
+    console.log(loginItems, loginItems?.user?._id, loginItems?.jwt);
+    setLoading(true);
+    try {
+      const response = await axios.post(
+        `https://apioragreen.najeebmart.com/api/v1/app/user/orders/${loginItems?.user?._id}`,
+        body,
+        {
+          headers: {
+            "x-api-key":
+              "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0eXBlIjoiYXBwIiwidGl0bGUiOiJ0b2tlbiBmb3IgYXBpIGtleSIsImlhdCI6MTYzNjQ0ODczOH0.zmvB5qcMd5k_-A2igZjpZppjc-C_PYVb2Saapo38Gi4",
+            Authorization: `Bearer ${loginItems?.jwt}`,
+            "Content-Type": "application/json",
+          },
+        }
+      );
+
+      console.log("ORDER SUCCESS:", response.data);
+
+      navigation.navigate("OrderSuccess");
+    } catch (error) {
+      console.log("ORDER ERROR:", error.response?.data || error.message);
+      alert("Failed to place order");
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
     <ScrollView style={styles.container} showsVerticalScrollIndicator={false}>
       <Text style={styles.title}>Checkout</Text>
@@ -49,31 +138,17 @@ export default function CheckoutScreen({ navigation }) {
               </Text>
 
               <View style={styles.priceRow}>
-                <Text style={styles.price}>Rs {item.sku.price.sale}</Text>
-                {item.sku.price.base > 0 && (
+                <Text style={styles.price}>Rs-{item.sku.price.sale}</Text>
+                {item.sku.price.discount > 0 && (
                   <Text style={styles.originalPrice}>
                     Rs {item.sku.price.base}
                   </Text>
                 )}
               </View>
+              <View style={styles.priceRow}>
+                <Text style={styles.price}>Quantity:</Text>
 
-              {/* Quantity */}
-              <View style={styles.qtyRow}>
-                <TouchableOpacity
-                  style={styles.qtyButton}
-                  onPress={() => dispatch(decreaseQty(item._id))}
-                >
-                  <Text style={styles.qtyButtonText}>−</Text>
-                </TouchableOpacity>
-
-                <Text style={styles.qtyValue}>{item.quantity}</Text>
-
-                <TouchableOpacity
-                  style={styles.qtyButton}
-                  onPress={() => dispatch(increaseQty(item._id))}
-                >
-                  <Text style={styles.qtyButtonText}>+</Text>
-                </TouchableOpacity>
+                <Text style={styles.price}>{item.quantity}</Text>
               </View>
             </View>
           </View>
@@ -97,21 +172,21 @@ export default function CheckoutScreen({ navigation }) {
               .join(" ")}{" "}
             ({selectedAddress.type})
           </Text>
-
+          <Text style={styles.addressText}>{selectedAddress.content}</Text>
           <Text style={styles.addressText}>
             Apt {selectedAddress.apartment}, Line {selectedAddress.line},{" "}
             {selectedAddress.city}, {selectedAddress.province},{" "}
             {selectedAddress.country}
           </Text>
 
-          <TouchableOpacity onPress={() => navigation.navigate("Addresses")}>
+          <TouchableOpacity onPress={() => navigation.navigate("Address")}>
             <Text style={styles.change}>Change Address</Text>
           </TouchableOpacity>
         </View>
       ) : (
         <TouchableOpacity
           style={styles.addAddress}
-          onPress={() => navigation.navigate("Addresses")}
+          onPress={() => navigation.navigate("Address")}
         >
           <Text style={styles.addAddressText}>+ Add Address</Text>
         </TouchableOpacity>
@@ -128,7 +203,7 @@ export default function CheckoutScreen({ navigation }) {
 
         <View style={styles.row}>
           <Text>Delivery Fee</Text>
-          <Text>Rs {deliveryFee}</Text>
+          <Text>{deliveryFee}</Text>
         </View>
 
         <View style={styles.divider} />
@@ -140,12 +215,20 @@ export default function CheckoutScreen({ navigation }) {
       </View>
 
       {/* ================= PLACE ORDER ================= */}
-      <Button
-        title="Place Order"
-        color={colors.primary}
-        disabled={!cartItems.length || !selectedAddress}
-        onPress={() => navigation.navigate("Orders")}
-      />
+      {loading ? (
+        <ActivityIndicator size="large" color={colors.primary} />
+      ) : (
+        <TouchableOpacity
+          disabled={!cartItems.length || !selectedAddress}
+          onPress={placeOrder}
+          style={[
+            styles.placeOrderButton,
+            (!cartItems.length || !selectedAddress) && { opacity: 0.5 },
+          ]}
+        >
+          <Text style={styles.placeOrderButtonText}>Place Order</Text>
+        </TouchableOpacity>
+      )}
     </ScrollView>
   );
 }
@@ -297,5 +380,19 @@ const styles = StyleSheet.create({
 
   description: {
     color: colors.gray,
+  },
+  placeOrderButton: {
+    backgroundColor: colors.primary,
+    paddingVertical: 14,
+    borderRadius: 10,
+    alignItems: "center",
+    justifyContent: "center",
+    marginBottom: 40,
+  },
+
+  placeOrderButtonText: {
+    color: colors.white,
+    fontSize: 16,
+    fontWeight: "700",
   },
 });

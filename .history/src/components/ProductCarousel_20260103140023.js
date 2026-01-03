@@ -40,8 +40,8 @@ export default function ProductCarousel({
     "19 ltr Empty Bottle Security",
     "12 ltr Water Bottle",
     "6 liter water bottle",
-    "Pack of 6 1.5 ltr  Premium",
     "Pack of 12 500 ml Premium",
+    "Pack of 6 1.5 ltr  Premium",
     "Pack Of 6 1.5 ltr water bottle",
     "Pack of 12 500ml water bottles",
   ];
@@ -98,18 +98,10 @@ export default function ProductCarousel({
                     {item?.sku?.price?.discount > 0 ? (
                       <View style={styles.badge}>
                         <Text style={styles.badgeText}>
-                          {item?.sku?.price?.base > 0
-                            ? `-${(
-                                (1 -
-                                  item?.sku?.price?.sale /
-                                    item?.sku?.price?.base) *
-                                100
-                              ).toFixed(1)}%`
-                            : "0%"}
+                          -{item?.sku?.price?.discount}.0%
                         </Text>
                       </View>
                     ) : null}
-
                     <Image
                       source={{ uri: getImageUrl(item?.image?.path) }}
                       style={[styles.image, { height: imageHeight }]}
