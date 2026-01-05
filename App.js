@@ -61,7 +61,7 @@ export default function App() {
   }, [appIsReady]);
 
   if (!appIsReady) {
-    return null; // Keep native splash screen visible while app is preparing
+    return null;
   }
   const DrawerNavigator = () => (
     <Drawer.Navigator
@@ -292,7 +292,7 @@ export default function App() {
   );
 
   return (
-    <Provider store={store}>
+    <Provider store={store} onLayout={onLayoutRootView}>
       <NavigationContainer>
         <View style={{ flex: 1 }} onLayout={onLayoutRootView}>
           <DrawerNavigator />
