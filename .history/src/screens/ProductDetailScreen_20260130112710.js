@@ -1,4 +1,3 @@
-import React from "react";
 import {
   View,
   Text,
@@ -21,21 +20,14 @@ export default function ProductDetailScreen({ route, navigation }) {
   return (
     <ScrollView contentContainerStyle={styles.container}>
       <View style={styles.card}>
-        <Image
-          source={{ uri: getImageUrl(item?.image?.path) }}
-          style={styles.image}
-          resizeMode="cover"
-        />
         <View style={styles.info}>
           <Text style={styles.title}>
             {item?.title || item?.variant || "Product"}
           </Text>
-          <Text style={styles.quantity}>
-            Quantity: {item?.sku?.quantity || 0}
-          </Text>
+          <Text style={styles.quantity}>Quantity: 1</Text>
           <View style={styles.priceWrapper}>
             <Text style={styles.price}>Rs {item?.sku?.price?.sale}</Text>
-            {item?.sku?.price?.base && (
+            {item?.sku?.price?.discount && (
               <Text style={styles.originalPrice}>
                 Rs {item?.sku?.price?.base}
               </Text>
@@ -53,7 +45,7 @@ export default function ProductDetailScreen({ route, navigation }) {
         style={styles.button}
         onPress={() => {
           handleAdd(item);
-          navigation.navigate("Checkout", { item });
+          navigation.navigate("cartScreen", { item });
         }}
       >
         <Text style={styles.buttonText}>Add To Cart</Text>

@@ -1,4 +1,3 @@
-import React from "react";
 import {
   View,
   Text,
@@ -24,25 +23,22 @@ export default function ProductDetailScreen({ route, navigation }) {
         <Image
           source={{ uri: getImageUrl(item?.image?.path) }}
           style={styles.image}
-          resizeMode="cover"
+          resizeMode="contain"
         />
         <View style={styles.info}>
           <Text style={styles.title}>
             {item?.title || item?.variant || "Product"}
           </Text>
-          <Text style={styles.quantity}>
-            Quantity: {item?.sku?.quantity || 0}
-          </Text>
+          <Text style={styles.quantity}>Quantity: 1</Text>
           <View style={styles.priceWrapper}>
             <Text style={styles.price}>Rs {item?.sku?.price?.sale}</Text>
-            {item?.sku?.price?.base && (
-              <Text style={styles.originalPrice}>
-                Rs {item?.sku?.price?.base}
-              </Text>
-            )}
+            <Text style={styles.originalPrice}>
+              {item?.sku?.price?.discount !== 0 &&
+                `Rs ${item?.sku?.price?.base}`}
+            </Text>
           </View>
           <View style={styles.descriptionWrapper}>
-            <ScrollView>
+            <ScrollView contentContainerStyle={styles.container}>
               <Text style={styles.description}>{item?.content}</Text>
             </ScrollView>
           </View>

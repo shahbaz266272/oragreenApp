@@ -38,11 +38,7 @@ export default function ProductDetailScreen({ route, navigation }) {
             </Text>
           </View>
           <View style={styles.descriptionWrapper}>
-            0
-            <ScrollView
-              nestedScrollEnabled={true}
-              showsVerticalScrollIndicator={true}
-            >
+            <ScrollView>
               <Text style={styles.description}>{item?.content}</Text>
             </ScrollView>
           </View>

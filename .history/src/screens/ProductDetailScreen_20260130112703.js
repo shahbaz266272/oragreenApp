@@ -20,11 +20,11 @@ export default function ProductDetailScreen({ route, navigation }) {
   return (
     <ScrollView contentContainerStyle={styles.container}>
       <View style={styles.card}>
-        <Image
-          source={{ uri: getImageUrl(item?.image?.path) }}
-          style={styles.image}
-          resizeMode="contain"
-        />
+        {/* <Image */}
+          // source={{ uri: getImageUrl(item?.image?.path) }}
+          // style={styles.image}
+          // resizeMode="contain"
+        // />
         <View style={styles.info}>
           <Text style={styles.title}>
             {item?.title || item?.variant || "Product"}
@@ -32,17 +32,14 @@ export default function ProductDetailScreen({ route, navigation }) {
           <Text style={styles.quantity}>Quantity: 1</Text>
           <View style={styles.priceWrapper}>
             <Text style={styles.price}>Rs {item?.sku?.price?.sale}</Text>
-            <Text style={styles.originalPrice}>
-              {item?.sku?.price?.discount !== 0 &&
-                `Rs ${item?.sku?.price?.base}`}
-            </Text>
+            {item?.sku?.price?.discount && (
+              <Text style={styles.originalPrice}>
+                Rs {item?.sku?.price?.base}
+              </Text>
+            )}
           </View>
           <View style={styles.descriptionWrapper}>
-            0
-            <ScrollView
-              nestedScrollEnabled={true}
-              showsVerticalScrollIndicator={true}
-            >
+            <ScrollView>
               <Text style={styles.description}>{item?.content}</Text>
             </ScrollView>
           </View>
