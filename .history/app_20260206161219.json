@@ -2,21 +2,16 @@
   "expo": {
     "name": "Oragreen",
     "slug": "oragreen",
-    "version": "1.0.2",
+    "version": "1.0.4",
     "orientation": "portrait",
     "userInterfaceStyle": "light",
-
-    "icon": "./assets/splash.png",
-
+    "icon": "./assets/splashfinal.png",
     "splash": {
       "image": "./assets/splashfinal.png",
-      "resizeMode": "cover",
-      "backgroundColor": "#fff",
-      "imageWidth": 200
+      "resizeMode": "contain",
+      "backgroundColor": "#ffffff"
     },
-
     "assetBundlePatterns": ["**/*"],
-
     "ios": {
       "supportsTablet": false,
       "bundleIdentifier": "com.oragreen.app",
@@ -24,7 +19,6 @@
         "ITSAppUsesNonExemptEncryption": false
       }
     },
-
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/androidfinal.png",
@@ -32,13 +26,17 @@
       },
       "package": "com.oragreen.app"
     },
-
     "web": {},
-
     "extra": {
       "eas": {
         "projectId": "4e517f72-c9c2-4d23-a107-ea17eb60136b"
       }
+    },
+    "runtimeVersion": {
+      "policy": "appVersion"
+    },
+    "updates": {
+      "url": "https://u.expo.dev/4e517f72-c9c2-4d23-a107-ea17eb60136b"
     }
   }
 }

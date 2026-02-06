@@ -53,7 +53,7 @@ export default function CheckoutScreen({ navigation }) {
         firstName: selectedAddress.firstName,
         lastName: selectedAddress.lastName,
         mobile: selectedAddress.mobile,
-        line: selectedAddress.content,
+        line: selectedAddress.line,
         city: selectedAddress.city,
         country: selectedAddress.country,
         type: selectedAddress.type,
@@ -173,7 +173,11 @@ export default function CheckoutScreen({ navigation }) {
             ({selectedAddress.type})
           </Text>
           <Text style={styles.addressText}>{selectedAddress.content}</Text>
-          <Text style={styles.addressText}>{` ${selectedAddress.mobile}`}</Text>
+          <Text style={styles.addressText}>
+            {`Address: ${item.content}`}
+
+            {selectedAddress.country}
+          </Text>
           <TouchableOpacity onPress={() => navigation.navigate("Address")}>
             <Text style={styles.change}>Change Address</Text>
           </TouchableOpacity>

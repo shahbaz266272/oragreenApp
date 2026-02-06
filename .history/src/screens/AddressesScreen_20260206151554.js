@@ -10,9 +10,12 @@ import {
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import colors from "../theme/colors";
+import { useDispatch } from "react-redux";
+import { setSelectedAddress } from "../features/address/addressCart";
 
 export default function AddressesScreen({ navigation }) {
   const [addresses, setAddresses] = useState([]);
+  const dispatch = useDispatch();
 
   // Load addresses from local storage
   const loadAddresses = async () => {
@@ -21,7 +24,7 @@ export default function AddressesScreen({ navigation }) {
       if (jsonValue != null) {
         setAddresses(JSON.parse(jsonValue));
       } else {
-        setAddresses([]); // initialize empty
+        setAddresses([]);
       }
     } catch (e) {
       console.log("Error loading addresses", e);
@@ -32,6 +35,18 @@ export default function AddressesScreen({ navigation }) {
     const unsubscribe = navigation.addListener("focus", loadAddresses);
     return unsubscribe;
   }, [navigation]);
+
+  /** ===================== DELETE ADDRESS ===================== **/
+  const deleteAddress = async (id) => {
+    try {
+      const updated = addresses.filter((a) => a.id !== id);
+      setAddresses(updated); // update UI
+
+      await AsyncStorage.setItem("@addresses", JSON.stringify(updated)); // save updated list
+    } catch (error) {
+      console.log("Error deleting address", error);
+    }
+  };
 
   return (
     <View style={styles.container}>
@@ -44,17 +59,47 @@ export default function AddressesScreen({ navigation }) {
         keyExtractor={(item) => item.id}
         contentContainerStyle={styles.list}
         renderItem={({ item }) => (
-          <TouchableOpacity style={styles.item}>
-            <MaterialCommunityIcons
-              name="map-marker-outline"
-              size={26}
-              color={colors.primary}
-            />
-            <View style={styles.itemText}>
-              <Text style={styles.itemLabel}>{item.label}</Text>
-              <Text style={styles.itemAddress}>{item.address}</Text>
-            </View>
-          </TouchableOpacity>
+          <View style={styles.item}>
+            {/* SELECT ADDRESS */}
+            <TouchableOpacity
+              style={{ flexDirection: "row", flex: 1, alignItems: "center" }}
+              onPress={() => {
+                dispatch(setSelectedAddress(item));
+                navigation.navigate("Checkout");
+              }}
+            >
+              <MaterialCommunityIcons
+                name="map-marker-outline"
+                size={26}
+                color={colors.primary}
+              />
+
+              <View style={styles.itemText}>
+                <Text style={styles.itemLabel}>
+                  {`${item.firstName} ${item.middleName ?? ""} ${
+                    item.lastName
+                  }`.trim()}
+                  {item.type ? ` (${item.type})` : ""}
+                </Text>
+
+                <Text style={styles.itemAddress}>
+                  {`Apt ${item.mobile}, Line ${item.line}, ${item.city}, ${item.province}, ${item.country}`}
+                </Text>
+              </View>
+            </TouchableOpacity>
+
+            {/* DELETE BUTTON */}
+            <TouchableOpacity
+              onPress={() => deleteAddress(item.id)}
+              style={styles.deleteButton}
+            >
+              <MaterialCommunityIcons
+                name="trash-can-outline"
+                size={24}
+                color={colors.danger || "red"}
+              />
+            </TouchableOpacity>
+          </View>
         )}
       />
 
@@ -88,6 +133,7 @@ const styles = StyleSheet.create({
   list: {
     padding: 16,
   },
+
   item: {
     flexDirection: "row",
     alignItems: "center",
@@ -98,6 +144,7 @@ const styles = StyleSheet.create({
   },
   itemText: {
     marginLeft: 12,
+    flex: 1,
   },
   itemLabel: {
     fontSize: 16,
@@ -108,6 +155,11 @@ const styles = StyleSheet.create({
     fontSize: 13,
     color: colors.gray,
   },
+
+  deleteButton: {
+    padding: 4,
+  },
+
   addButtonContainer: {
     padding: 16,
     borderTopWidth: 1,

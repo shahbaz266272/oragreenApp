@@ -107,7 +107,7 @@ export default function LoginScreen({ navigation }) {
                 style={styles.input}
                 value={email}
                 onChangeText={setEmail}
-                placeholderTextColor="#000000"
+                // placeholderTextColor="#000000"
               />
 
               <View style={styles.passwordWrapper}>

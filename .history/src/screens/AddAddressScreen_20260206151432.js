@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from "react";
+import React, { useState } from "react";
 import {
   View,
   Text,
@@ -13,7 +13,6 @@ import {
 } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import colors from "../theme/colors";
-import { useFocusEffect } from "@react-navigation/native";
 
 export default function AddAddressScreen({ navigation }) {
   // Required fields
@@ -40,7 +39,7 @@ export default function AddAddressScreen({ navigation }) {
   });
 
   const handleSave = async () => {
-    if (!firstName || !lastName || !content) {
+    if (!firstName || !lastName || !mobile || !content) {
       Alert.alert("Validation Error", "Please fill in all required fields.");
       return;
     }
@@ -82,32 +81,6 @@ export default function AddAddressScreen({ navigation }) {
       console.log("Error saving address", e);
     }
   };
-  const resetForm = () => {
-    setFirstName("");
-    setMiddleName("");
-    setLastName("");
-    setMobile("");
-    setEmail("");
-    setLine("1");
-    setCity("Islamabad");
-    setProvince("Islamabad Capital Territory");
-    setCountry("Pakistan");
-    setContent("");
-    setType("Work");
-    setGender("Male");
-    setApartment("1");
-    setIsActive(true);
-    setIsDefault(true);
-    setLocation({
-      type: "Point",
-      coordinates: [33.6951, 72.9724],
-    });
-  };
-  useFocusEffect(
-    useCallback(() => {
-      resetForm();
-    }, []),
-  );
 
   return (
     <KeyboardAvoidingView
@@ -116,27 +89,21 @@ export default function AddAddressScreen({ navigation }) {
     >
       <ScrollView contentContainerStyle={styles.container}>
         {/* Personal Info */}
-        <Text style={styles.label}>
-          First Name
-          <Text style={styles.asterisk}>*</Text>
-        </Text>
+        <Text style={styles.label}>First Name*</Text>
         <TextInput
           style={styles.input}
           value={firstName}
           onChangeText={setFirstName}
         />
 
-        <Text style={styles.label}>
-          Last Name
-          <Text style={styles.asterisk}>*</Text>
-        </Text>
+        <Text style={styles.label}>Last Name*</Text>
         <TextInput
           style={styles.input}
           value={lastName}
           onChangeText={setLastName}
         />
 
-        <Text style={styles.label}>Mobile</Text>
+        <Text style={styles.label}>Mobile*</Text>
         <TextInput
           style={styles.input}
           value={mobile}
@@ -145,10 +112,7 @@ export default function AddAddressScreen({ navigation }) {
         />
 
         {/* Address Info */}
-        <Text style={styles.label}>
-          Complete Address
-          <Text style={styles.asterisk}>*</Text>
-        </Text>
+        <Text style={styles.label}>Complete Address</Text>
         <TextInput
           style={styles.input}
           value={content}
@@ -179,9 +143,6 @@ const styles = StyleSheet.create({
     fontWeight: "600",
     color: colors.dark,
     marginTop: 12,
-  },
-  asterisk: {
-    color: "red",
   },
   input: {
     backgroundColor: colors.white,

@@ -25,7 +25,7 @@ export default function CheckoutScreen({ navigation }) {
   /** ------------ PRICE CALCULATIONS ------------ */
   const subtotal = cartItems.reduce(
     (sum, item) => sum + item.sku.price.sale * item.quantity,
-    0
+    0,
   );
 
   const deliveryFee = "Free";
@@ -37,7 +37,7 @@ export default function CheckoutScreen({ navigation }) {
 
     const subTotal = cartItems.reduce(
       (sum, item) => sum + item.sku.price.sale * item.quantity,
-      0
+      0,
     );
 
     const shipping = 200;
@@ -103,7 +103,7 @@ export default function CheckoutScreen({ navigation }) {
             Authorization: `Bearer ${loginItems?.jwt}`,
             "Content-Type": "application/json",
           },
-        }
+        },
       );
 
       console.log("ORDER SUCCESS:", response.data);
@@ -174,11 +174,8 @@ export default function CheckoutScreen({ navigation }) {
           </Text>
           <Text style={styles.addressText}>{selectedAddress.content}</Text>
           <Text style={styles.addressText}>
-            Apt {selectedAddress.apartment}, Line {selectedAddress.line},{" "}
-            {selectedAddress.city}, {selectedAddress.province},{" "}
-            {selectedAddress.country}
+            {` ${selectedAddress.content}`}
           </Text>
-
           <TouchableOpacity onPress={() => navigation.navigate("Address")}>
             <Text style={styles.change}>Change Address</Text>
           </TouchableOpacity>

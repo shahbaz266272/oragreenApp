@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from "react";
+import React, { useState } from "react";
 import {
   View,
   Text,
@@ -13,7 +13,6 @@ import {
 } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import colors from "../theme/colors";
-import { useFocusEffect } from "@react-navigation/native";
 
 export default function AddAddressScreen({ navigation }) {
   // Required fields
@@ -82,32 +81,6 @@ export default function AddAddressScreen({ navigation }) {
       console.log("Error saving address", e);
     }
   };
-  const resetForm = () => {
-    setFirstName("");
-    setMiddleName("");
-    setLastName("");
-    setMobile("");
-    setEmail("");
-    setLine("1");
-    setCity("Islamabad");
-    setProvince("Islamabad Capital Territory");
-    setCountry("Pakistan");
-    setContent("");
-    setType("Work");
-    setGender("Male");
-    setApartment("1");
-    setIsActive(true);
-    setIsDefault(true);
-    setLocation({
-      type: "Point",
-      coordinates: [33.6951, 72.9724],
-    });
-  };
-  useFocusEffect(
-    useCallback(() => {
-      resetForm();
-    }, []),
-  );
 
   return (
     <KeyboardAvoidingView

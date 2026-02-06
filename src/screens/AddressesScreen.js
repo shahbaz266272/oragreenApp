@@ -83,8 +83,9 @@ export default function AddressesScreen({ navigation }) {
                 </Text>
 
                 <Text style={styles.itemAddress}>
-                  {`Apt ${item.apartment}, Line ${item.line}, ${item.city}, ${item.province}, ${item.country}`}
+                  {`Address: ${item.content}`}
                 </Text>
+                <Text style={styles.itemAddress}>{`${item.mobile}`}</Text>
               </View>
             </TouchableOpacity>
 

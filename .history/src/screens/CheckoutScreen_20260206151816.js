@@ -25,7 +25,7 @@ export default function CheckoutScreen({ navigation }) {
   /** ------------ PRICE CALCULATIONS ------------ */
   const subtotal = cartItems.reduce(
     (sum, item) => sum + item.sku.price.sale * item.quantity,
-    0,
+    0
   );
 
   const deliveryFee = "Free";
@@ -37,7 +37,7 @@ export default function CheckoutScreen({ navigation }) {
 
     const subTotal = cartItems.reduce(
       (sum, item) => sum + item.sku.price.sale * item.quantity,
-      0,
+      0
     );
 
     const shipping = 200;
@@ -53,7 +53,7 @@ export default function CheckoutScreen({ navigation }) {
         firstName: selectedAddress.firstName,
         lastName: selectedAddress.lastName,
         mobile: selectedAddress.mobile,
-        line: selectedAddress.content,
+        line: selectedAddress.line,
         city: selectedAddress.city,
         country: selectedAddress.country,
         type: selectedAddress.type,
@@ -103,7 +103,7 @@ export default function CheckoutScreen({ navigation }) {
             Authorization: `Bearer ${loginItems?.jwt}`,
             "Content-Type": "application/json",
           },
-        },
+        }
       );
 
       console.log("ORDER SUCCESS:", response.data);
@@ -170,10 +170,14 @@ export default function CheckoutScreen({ navigation }) {
             ]
               .filter(Boolean)
               .join(" ")}{" "}
-            ({selectedAddress.type})
+            ({selectedAddress.type}) 
           </Text>
           <Text style={styles.addressText}>{selectedAddress.content}</Text>
-          <Text style={styles.addressText}>{` ${selectedAddress.mobile}`}</Text>
+          <Text style={styles.addressText}>
+    {`Address: ${item.content}`}
+          
+            {selectedAddress.country}
+ 
           <TouchableOpacity onPress={() => navigation.navigate("Address")}>
             <Text style={styles.change}>Change Address</Text>
           </TouchableOpacity>

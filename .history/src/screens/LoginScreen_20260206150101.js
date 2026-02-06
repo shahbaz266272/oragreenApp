@@ -38,7 +38,7 @@ export default function LoginScreen({ navigation }) {
     try {
       const response = await authService.loginWithEmail(
         email.trim().toLowerCase(),
-        password,
+        password
       );
 
       const { jwt, user } = response?.data?.data || {};
@@ -58,7 +58,7 @@ export default function LoginScreen({ navigation }) {
           jwt,
           user,
           isLoggedIN: true,
-        }),
+        })
       );
 
       navigation.reset({ index: 0, routes: [{ name: "Home" }] });
@@ -117,7 +117,6 @@ export default function LoginScreen({ navigation }) {
                   style={[styles.input, styles.passwordInput]}
                   value={password}
                   onChangeText={setPassword}
-                  placeholderTextColor="#000000"
                 />
                 <TouchableOpacity
                   style={styles.toggleVisibility}
