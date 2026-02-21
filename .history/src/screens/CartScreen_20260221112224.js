@@ -5,6 +5,7 @@ import {
   Button,
   TouchableOpacity,
   Image,
+  ScrollView,
 } from "react-native";
 import colors from "../theme/colors";
 import { useSelector, useDispatch } from "react-redux";
@@ -16,12 +17,30 @@ import {
 } from "../features/cart/cartSlice";
 
 import { getImageUrl } from "../services/utils";
+import { useEffect, useState } from "react";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { clearLoginInfo, setLoginInfo } from "../features/loginInfo/LoginInfo";
 
 export default function CartScreen({ navigation }) {
   const dispatch = useDispatch();
   const cartItems = useSelector((state) => state.cart.items);
+  const loginItems = useSelector((state) => state.loginInfo?.item);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  useEffect(() => {
+    const loadLoggedIN = async () => {
+      try {
+        const userString = await AsyncStorage.getItem("isLoggedIn");
+        setIsLoggedIn(userString === "true");
+      } catch (error) {
+        console.log("Error loading isloggedin:", error);
+      }
+    };
+
+    loadLoggedIN();
+  }, []);
+  console.log(isLoggedIn, loginItems, "--0-0isLoggedIn");
   return (
-    <View style={styles.container}>
+    <ScrollView style={styles.container}>
       <Text style={styles.title}>Cart</Text>
 
       <View style={styles.listContainer}>
@@ -54,7 +73,7 @@ export default function CartScreen({ navigation }) {
 
                 <View style={styles.priceRow}>
                   <Text style={styles.price}>Rs {item.sku?.price?.sale}</Text>
-                  {item.sku?.price?.base > 0 && (
+                  {item.sku?.price?.discount > 0 && (
                     <Text style={styles.originalPrice}>
                       Rs {item.sku?.price?.base}
                     </Text>
@@ -82,26 +101,28 @@ export default function CartScreen({ navigation }) {
             </View>
           ))
         ) : (
-          <Text style={styles.description}>No items in checkout</Text>
+          <Text style={styles.description}>No items in Cart</Text>
         )}
       </View>
 
-      <View style={{ marginTop: 20 }}>
+      <View style={{ marginTop: 20, marginBottom: 30 }}>
         <TouchableOpacity
-          style={[styles.actionButton, styles.disabledButton]}
+          style={[styles.actionButton]}
           activeOpacity={0.8}
           onPress={() =>
-            cartItems?.length > 0
-              ? navigation.navigate("Checkout")
-              : navigation.navigate("Home")
+            loginItems?.isLoggedIN
+              ? cartItems?.length > 0
+                ? navigation.navigate("Checkout")
+                : navigation.navigate("Home")
+              : navigation.navigate("LoginScreen")
           }
         >
           <Text style={styles.actionButtonText}>
-            {cartItems?.length > 0 ? "Place Order" : "Add Items"}
+            {cartItems?.length > 0 ? "Proceed To Checkout" : "Add Items"}
           </Text>
         </TouchableOpacity>
       </View>
-    </View>
+    </ScrollView>
   );
 }
 
@@ -134,6 +155,8 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: colors.light,
     padding: 16,
+    paddingBottom: 50,
+    overflow: "auto",
   },
   title: {
     fontSize: 20,

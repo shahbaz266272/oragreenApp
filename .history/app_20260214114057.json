@@ -16,8 +16,7 @@
       "supportsTablet": false,
       "bundleIdentifier": "com.oragreen.app",
       "infoPlist": {
-        "ITSAppUsesNonExemptEncryption": false,
-        "UIBackgroundModes": ["remote-notification"]
+        "ITSAppUsesNonExemptEncryption": false
       }
     },
     "android": {
@@ -25,9 +24,7 @@
         "foregroundImage": "./assets/androidfinal.png",
         "backgroundColor": "#ffffff"
       },
-      "package": "com.oragreen.app",
-      "googleServicesFile": "./google-services.json",
-      "useNextNotificationsApi": true
+      "package": "com.oragreen.app"
     },
     "web": {},
     "extra": {
@@ -40,16 +37,6 @@
     },
     "updates": {
       "url": "https://u.expo.dev/4e517f72-c9c2-4d23-a107-ea17eb60136b"
-    },
-    "plugins": [
-      [
-        "expo-notifications",
-        {
-          "icon": "./assets/splashfinal.png",
-          "color": "#ffffff",
-          "sounds": ["./assets/notification-sound.wav"]
-        }
-      ]
-    ]
+    }
   }
 }

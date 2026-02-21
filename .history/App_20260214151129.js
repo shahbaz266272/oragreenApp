@@ -66,19 +66,6 @@ export default function App() {
     loadApp();
   }, []);
 
-  // 🔔 Setup push notifications
-  useEffect(() => {
-    (async () => {
-      // Register for push notifications
-      await registerForPushNotifications();
-
-      // Set up notification listeners
-      const cleanup = setupNotificationListeners();
-
-      return cleanup;
-    })();
-  }, []);
-
   const onLayoutRootView = useCallback(async () => {
     if (appIsReady) {
       // This tells the splash screen to hide immediately after the root view

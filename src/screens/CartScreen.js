@@ -101,7 +101,7 @@ export default function CartScreen({ navigation }) {
             </View>
           ))
         ) : (
-          <Text style={styles.description}>No items in checkout</Text>
+          <Text style={styles.description}>No items in Cart</Text>
         )}
       </View>
 
