@@ -37,7 +37,7 @@ const Drawer = createDrawerNavigator();
 export default function App() {
   const { expoPushToken, notification } = usePushNotifications();
   const data = JSON.stringify(notification, undefined, 2);
-  console.log({ expoPushToken });
+
   const [appIsReady, setAppIsReady] = useState(false);
 
   const [isLoggedIn, setIsLoggedIn] = useState(false);
